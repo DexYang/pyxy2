@@ -2,7 +2,6 @@ import pygame as pg
 from io import BytesIO
 from lib.wdf import WDF
 from lib.was import WAS
-from core.animation import Animation
 
 
 class ResManager:
@@ -17,18 +16,20 @@ class ResManager:
         self.pool = {}
         self.wdfs = {}
 
-    def get(self, wdf, path_or_hash, pal=None):
+    def get(self, wdf, path_or_hash, name="", pal=None):
         if (wdf, path_or_hash) in self.pool:
             return self.pool[wdf, path_or_hash]
 
         if wdf not in self.wdfs:
             self.wdfs[wdf] = WDF(wdf)
 
+        if name == "":
+            name = wdf + ":" + path_or_hash
+
         item = self.wdfs[wdf].get(path_or_hash, pal)
         if isinstance(item, WAS):
-            ani = Animation(item)
-            self.pool[wdf, path_or_hash] = ani
-            return ani
+            self.pool[name] = item
+            return item
         elif item.type == int("0x0", 16):
             return pg.image.load(BytesIO(item.data), "tga")
         elif item.type == int("0x4d42", 16):

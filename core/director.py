@@ -18,8 +18,6 @@ class Director(Ref):
 
         self.fps = fps
         self.clock = pg.time.Clock()
-        self.loops = 0
-        self.loops_end = 20
 
         self.running = True
         self._screen = pg.display.set_mode(resolution)
@@ -27,6 +25,10 @@ class Director(Ref):
         self.scene_class_pool = {}
         self._scene = None
         self._old_scene = None
+
+        from core.mouse import Mouse
+        pg.mouse.set_visible(False)
+        self.mouse = Mouse(0, 0)
 
     @property
     def title(self):
@@ -57,6 +59,7 @@ class Director(Ref):
                 else:
                     event_attributes["name"] = event_type
                 event = Event(event_attributes["name"], **event_attributes)
+
                 self._scene.handle_events(event)  # 交互事件按Z轴传递
             elif event.type in OTHER_EVENTS:
                 event_attributes["name"] = OTHER_EVENTS[event.type]
@@ -65,11 +68,13 @@ class Director(Ref):
                 self.notify(event_name=event_attributes["name"], **event_attributes)
 
     def update(self, context):
+        self.mouse.update(context)
         self._scene.update(context)
 
     def draw(self):
         self._screen.fill((70, 70, 70))
         self._scene.draw(self._screen)
+        self.mouse.draw(self._screen)
 
     def run(self, scene_class_name=None):
         if scene_class_name:
@@ -77,8 +82,8 @@ class Director(Ref):
 
         context = Context()
         while self.running:
-            self.loops = self.loops + 1 if self.loops < self.loops_end else 0
-            context.set_time(self.clock.tick(self.fps), pg.time.get_ticks(), self.loops)
+            context.set_mouse_pos(pg.mouse.get_pos())
+            context.set_time(self.clock.tick(self.fps), pg.time.get_ticks())
 
             self.handle_events()
 

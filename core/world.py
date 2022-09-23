@@ -8,6 +8,7 @@ from core.sprite import Sprite
 from core.mask import Mask
 from core.role_manager import role_manager
 from core.animated.character import Character
+from core.animated.throwaway import Throwaway
 
 from lib.map import Map
 
@@ -81,13 +82,18 @@ class World(Sprite):
         x = self.window.left + event.pos[0]
         y = self.window.top + event.pos[1]
         print(x, y)
-        event.handled = True
+        self.new_target(event, False)
 
     def on_mouse_right_down(self, event):
+        self.new_target(event, True)
+
+    def new_target(self, event, running):
         target = (self.window.left + event.pos[0], self.window.top + event.pos[1])
         path_list = self.map.find_path((role_manager.main_role.x, role_manager.main_role.y), target)
-        role_manager.set_main_role_new_target(path_list, running=True)
+        role_manager.set_main_role_new_target(path_list, running)
         event.handled = True
+
+        self.add_child(Throwaway("gires.wdf", "scene/walkpoint.tca", target[0], target[1]))
 
     def update(self, context):
         main_role = role_manager.main_role
@@ -171,23 +177,28 @@ class World(Sprite):
                     head = self.heads[i][j]
                     while head:
                         head.update(context)
+                        _next = head.next
                         if isinstance(head, Character):  #
                             self.character_update_z_under_mask(head)
                         tmp_row, tmp_col = self.get_window_index(head.x, head.y)
                         if tmp_row != i or tmp_col != j or head.useless:
-                            if head.pre is not None:
+                            if head.pre:
                                 head.pre.next = head.next
-                            else:
+                            if head.next:
+                                head.next.pre = head.pre
+
+                            if not head.pre:
                                 self.heads[i][j] = head.next
+
+                            head.pre = None
                             head.next = None
                             if head.useless is not None:
                                 self.add_child(head)
-                        child = head
-                        head = head.next
-                        if child.useless:
-                            child.destroy()
-                        else:
-                            self.children_in_window.append(child)
+                        
+                        if not head.useless:
+                            self.children_in_window.append(head)
+
+                        head = _next
         self.children_in_window.sort(key=lambda item: item.z)
 
     def children_handle_events(self, event):
@@ -196,8 +207,12 @@ class World(Sprite):
             for j in range(col, col + 2):
                 if i in self.heads and j in self.heads[i] and self.heads[i][j]:
                     self.heads[i][j].handle_event(event)
-                    if event.handled:
-                        return
+                    head = self.heads[i][j]
+                    while head:
+                        head.handle_event(event)
+                        head = head.next
+                        if event.handled:
+                            return
 
     def character_update_z_under_mask(self, character):
         left_key_x = character.x - 20

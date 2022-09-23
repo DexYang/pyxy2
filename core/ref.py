@@ -1,4 +1,5 @@
 import uuid
+from utils.logger import logger
 from core.event_dispatcher import EVENT_DISPATCHER
 
 
@@ -7,6 +8,7 @@ class Ref:
         self.event_dispatcher = EVENT_DISPATCHER
         self.id = uuid.uuid1()
         self.__register()
+        self.log = logger
 
     def notify(self, event_name, **kwargs):
         self.event_dispatcher.dispatch_event(event_name, **kwargs)
@@ -30,5 +32,4 @@ class Ref:
             callback(method_name[3:], self)
 
     def destroy(self):
-        self.event_dispatcher = None
         self.__del__()

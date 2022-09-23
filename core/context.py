@@ -1,13 +1,7 @@
-"""
-update context
-"""
-
-
 class Context:
     def __init__(self):
         self.delta_time = 0.0
         self.current_time = 0.0
-        self.loops = 0
 
         self.left = 0
         self.top = 0
@@ -16,13 +10,12 @@ class Context:
 
         self.dirty_window = None
 
-    def set_time(self, delta_time, current_time, loops):
+        self.mouse_x = 0
+        self.mouse_y = 0
+
+    def set_time(self, delta_time, current_time):
         self.delta_time = delta_time
         self.current_time = current_time
-        self.loops = loops
-
-    def is_restart_loops(self):
-        return self.loops == 0
 
     def get_current_time(self):
         return self.current_time
@@ -37,6 +30,12 @@ class Context:
 
     def get_left_top(self):
         return self.left, self.top
+
+    def set_mouse_pos(self, pos):
+        self.mouse_x, self.mouse_y = pos
+
+    def get_mouse_pos(self):
+        return self.mouse_x, self.mouse_y
 
     def set_dirty_window(self, dirty_window):
         self.dirty_window = dirty_window

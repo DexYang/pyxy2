@@ -36,7 +36,6 @@ class WDF:
             _hash = int(s, base=16)
         else:
             _hash = get_hash_py(s)
-            print(_hash)
 
         self.file = open(self.path, 'rb')
         

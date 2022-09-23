@@ -24,7 +24,8 @@ class EventDispatcher:
 
     def drop_event(self, event_name, obj):
         if event_name in self.EVENTS:
-            self.EVENTS[event_name].pop(obj.id)
+            if obj.id in self.EVENTS[event_name]:
+                self.EVENTS[event_name].pop(obj.id)
             if len(self.EVENTS[event_name]) <= 0:
                 self.EVENTS.pop(event_name)
 

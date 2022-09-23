@@ -34,7 +34,7 @@ class CharacterMovingState(CharacterState):
             self.move()
             super().update(context)
         elif self.is_on_target():
-            self.change_state("stand_normal")
+            self.change_state("stand")
         else:
             self.move()
             super().update(context)
@@ -85,17 +85,19 @@ class CharacterMovingState(CharacterState):
 
 class CharacterWalkingState(CharacterMovingState):
     speed = WalkingSpeed
-    res_index = "walk"
+    state_name = "walk"
+    animation_rate = 120
 
 
 class CharacterRunningState(CharacterMovingState):
     speed = RunningSpeed
-    res_index = "run"
+    state_name = "run"
+    animation_rate = 80
 
 
 class CharacterStandNormalState(CharacterState):
-    res_index = "stand_normal"
-    other_res = "stand_tease"
+    state_name = "stand"
+    other = "stand2"
     loops = 5
 
     def __init__(self, wdf_name, was_hash):
@@ -109,11 +111,11 @@ class CharacterStandNormalState(CharacterState):
         if one_loop:
             self.loops_count += 1
             if self.loops_count >= self.loops:
-                self.change_state(self.other_res)
+                self.change_state(self.other)
                 self.loops_count = 0
 
 
 class CharacterStandTeaseState(CharacterStandNormalState):
-    res_index = "stand_tease"
-    other_res = "stand_normal"
+    state_name = "stand2"
+    other = "stand"
     loops = 1

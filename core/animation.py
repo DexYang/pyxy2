@@ -2,11 +2,20 @@ import pygame as pg
 from settings import AnimationRate
 
 
+class Frame:
+    def __init__(self, raw_frame):
+        self.key_x = raw_frame["x"]
+        self.key_y = raw_frame["y"]
+        self.width = raw_frame["width"]
+        self.height = raw_frame["height"]
+        self.surface = pg.image.frombuffer(raw_frame["data"], (self.width, self.height), "RGBA").convert_alpha()
+
+
 class Animation:
     bright = pg.Surface((400, 400), flags=pg.SRCALPHA)
     bright.fill((80, 80, 80, 0))
 
-    def __init__(self, was):
+    def __init__(self, was, AnimationRate):
         self.direction_num = was.direction_num
         self.frame_num = was.frame_num
         self.key_x = was.x
@@ -45,9 +54,11 @@ class Animation:
 
         self.direction = 0
 
+        self.AnimationRate = AnimationRate
+
     def update(self, current_time):
         one_loop = False
-        if current_time > self.last_time + AnimationRate:
+        if current_time > self.last_time + self.AnimationRate:
             self.frame += 1
             if self.frame >= self.last_frame:
                 self.frame = self.first_frame
@@ -55,22 +66,20 @@ class Animation:
             self.last_time = current_time
         return one_loop
 
-    def get_current_frame(self):
+    def get_current_frame(self) -> Frame:
         return self.frames[self.direction][self.frame_seq[self.frame]]
 
     def set_direction(self, direction):
         self.direction = direction
 
-    def draw(self, screen, x, y):
+    def draw(self, screen, x, y, bright):
         frame = self.get_current_frame()
         surface = frame.surface.copy()
+        if bright:
+            surface.blit(self.bright, (0, 0), special_flags=pg.BLEND_RGB_ADD)
         screen.blit(surface, (x - frame.key_x, y - frame.key_y))
 
-
-class Frame:
-    def __init__(self, raw_frame):
-        self.key_x = raw_frame["x"]
-        self.key_y = raw_frame["y"]
-        self.width = raw_frame["width"]
-        self.height = raw_frame["height"]
-        self.surface = pg.image.frombuffer(raw_frame["data"], (self.width, self.height), "RGBA").convert_alpha()
+    def get_at(self, x, y):
+        surface = self.get_current_frame().surface
+        if surface.get_rect().collidepoint(x, y):
+            return surface.get_at((x, y))

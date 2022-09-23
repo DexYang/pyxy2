@@ -17,6 +17,8 @@ class Sprite(Ref):
         self.next = None
         self.useless = False
 
+        self.hover = False
+
         self.surface = None
 
     @property
@@ -42,9 +44,3 @@ class Sprite(Ref):
 
     def draw(self, screen):
         screen.blit(self.surface, self.screen_rect)
-
-    def destroy(self):
-        super().destroy()
-        self.rect = None
-        self.screen_rect = None
-        self.surface = None
