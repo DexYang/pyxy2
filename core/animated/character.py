@@ -68,8 +68,6 @@ class Character(AnimatedSprite):
 
     def get_at(self, x, y):
         ani_screen_rect = self.get_ani_screen_rect()
-        print("get_at")
         if ani_screen_rect.collidepoint(x, y):
-            print("in_rect")
             return self.state.ani.get_at(x - ani_screen_rect.x, y - ani_screen_rect.y)
         return False
