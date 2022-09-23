@@ -61,15 +61,12 @@ class Character(AnimatedSprite):
         color = self.get_at(mouse_x, mouse_y)
         if color and color[3] > 0:
             self.hover = True
-            print(self.hover)
             event.handled = True
         else:
             self.hover = False
 
     def get_at(self, x, y):
         ani_screen_rect = self.get_ani_screen_rect()
-        print("get_at")
         if ani_screen_rect.collidepoint(x, y):
-            print("in_rect")
             return self.state.ani.get_at(x - ani_screen_rect.x, y - ani_screen_rect.y)
         return False
