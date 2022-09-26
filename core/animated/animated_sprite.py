@@ -65,4 +65,6 @@ class AnimatedSprite(Sprite):
     def get_ani_screen_rect(self):
         return pg.Rect(self.screen_rect.x - self.state.ani.key_x, self.screen_rect.y - self.state.ani.key_y, self.state.ani.width, self.state.ani.height)
 
+    def get_ani_rect(self):
+        return pg.Rect(self.rect.x - self.state.ani.key_x, self.rect.y - self.state.ani.key_y, self.state.ani.width, self.state.ani.height)
     

@@ -83,3 +83,6 @@ class Animation:
         surface = self.get_current_frame().surface
         if surface.get_rect().collidepoint(x, y):
             return surface.get_at((x, y))
+
+    def get_rect(self): 
+        return self.get_current_frame().surface.get_rect()

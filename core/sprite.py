@@ -22,7 +22,7 @@ class Sprite(Ref):
         self.surface = None
 
     @property
-    def x(self):
+    def x(self):  # x y为世界坐标，因为ani在draw时，已经减去锚点，实际上xy是人物锚点（人物脚底）
         return self.rect.x
 
     @x.setter

@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     map_thread.start()
 
-    role = Character(1, 500, 500)
+    role = Character(1, 5100, 4200)
 
     role_manager.main_role = role
 

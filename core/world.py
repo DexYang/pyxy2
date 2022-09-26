@@ -215,28 +215,16 @@ class World(Sprite):
                             return
 
     def character_update_z_under_mask(self, character):
-        left_key_x = character.x - 20
-        right_key_x = character.x + 20
-        key_x = character.x
-        key_y = character.y
-        row, col = self.get_block_index(key_x, key_y)
+        char_rect = character.get_ani_rect()
+        char_x = character.x
+        char_y = character.y
+        row, col = self.get_block_index(char_x, char_y)
 
         for mask_index in self.map_block_info[row][col]["masks"]:
             if self.masks[mask_index].received:
                 mask = self.masks[mask_index]
-                
-                if mask.rect.y < key_y < mask.z:
-                    offset_lcx = left_key_x - mask.rect.x
-                    offset_rcx = right_key_x - mask.rect.x
-                    offset_x = key_x - mask.rect.x
-                    offset_y = key_y - mask.rect.y
-                    if mask.rect.collidepoint(left_key_x, key_y) or mask.rect.collidepoint(right_key_x, key_y):
-                        if mask.rect.collidepoint(left_key_x, key_y) and mask.collide(offset_lcx, offset_y):
-                            character.z = max(character.z, mask.z + 1)
-                        elif mask.rect.collidepoint(right_key_x, key_y) and mask.collide(offset_rcx, offset_y):
-                            character.z = max(character.z, mask.z + 1)
-                        elif mask.rect.collidepoint(key_x, key_y) and mask.collide(offset_x, offset_y):
-                            character.z = max(character.z, mask.z + 1)
+                if mask.calc_sort_z(char_rect, char_x, char_y): 
+                    character.z = max(character.z, mask.z + 1)
 
     def add_child(self, child):
         row, col = self.get_window_index(child.x, child.y)
@@ -261,8 +249,8 @@ class World(Sprite):
                 block = self.map_block_info[i][j]
                 if block["received"]:
                     screen.blit(block["surface"], (block["x"] - self.left_top[0], block["y"] - self.left_top[1]))
-        # self.draw_cell(screen)
-        area = pg.surface.Surface((800, 600), flags=pg.SRCALPHA)
+
+        area = pg.surface.Surface(WindowSize, flags=pg.SRCALPHA)
         render_items = self.mask_in_window + self.children_in_window
         render_items.sort(key=lambda t: t.z)
         for item in render_items:

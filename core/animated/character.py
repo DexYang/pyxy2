@@ -70,3 +70,4 @@ class Character(AnimatedSprite):
         if ani_screen_rect.collidepoint(x, y):
             return self.state.ani.get_at(x - ani_screen_rect.x, y - ani_screen_rect.y)
         return False
+        
