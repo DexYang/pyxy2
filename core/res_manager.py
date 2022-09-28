@@ -2,6 +2,7 @@ import pygame as pg
 from io import BytesIO
 from lib.wdf import WDF
 from lib.was import WAS
+from settings import XY2PATH
 
 
 class ResManager:
@@ -16,17 +17,25 @@ class ResManager:
         self.pool = {}
         self.wdfs = {}
 
-    def get(self, wdf, path_or_hash, name="", pal=None):
-        if (wdf, path_or_hash) in self.pool:
-            return self.pool[wdf, path_or_hash]
-
-        if wdf not in self.wdfs:
-            self.wdfs[wdf] = WDF(wdf)
-
+    def get(self, wdf: str, path_or_hash, name="", pal=None):
         if name == "":
             name = wdf + ":" + path_or_hash
 
-        item = self.wdfs[wdf].get(path_or_hash, pal)
+        if name in self.pool:
+            return self.pool[name]
+
+        if wdf.find(".wd") != -1:
+
+            if wdf not in self.wdfs:
+                self.wdfs[wdf] = WDF(XY2PATH + wdf)
+
+            item = self.wdfs[wdf].get(path_or_hash, pal)
+
+        else:
+            if path_or_hash.endswith(".tcp") or path_or_hash.endswith(".tca"):
+                item = WAS("res/"+wdf+"/"+path_or_hash)
+
+        
         if isinstance(item, WAS):
             self.pool[name] = item
             return item

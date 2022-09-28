@@ -1,16 +1,23 @@
+from socket import gaierror
 from core.director import Director
 from lib.pyxy2 import MapThread
 from core.animated.character import Character
 from core.role_manager import role_manager
+from core.res_manager import res_manager
 
 from game.scenes.old_chang_an import OldChangAn
 from game.scenes.new_chang_an import NewChangAn
+from game.login.start_scene import StartScene
+from game.login.note_scene import NoteScene
 
 
 if __name__ == '__main__':
+
     director = Director(title="大话西游II")
 
     director.init_scene({
+        "StartScene": StartScene,
+        "NoteScene": NoteScene,
         "OldChangAnScene": OldChangAn,
         "NewChangAnScene": NewChangAn
     })
@@ -23,4 +30,4 @@ if __name__ == '__main__':
 
     role_manager.main_role = role
 
-    director.run("OldChangAnScene")
+    director.run("StartScene")

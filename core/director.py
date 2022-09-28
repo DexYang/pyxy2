@@ -10,7 +10,7 @@ from pygame.sprite import Sprite
 
 
 class Director(Ref):
-    def __init__(self, title="Director", resolution=(800, 600), fps=60):
+    def __init__(self, title="Director", resolution=(640, 480), fps=60):
         super().__init__()
         pg.init()
         self.title = title
@@ -45,7 +45,8 @@ class Director(Ref):
     @resolution.setter
     def resolution(self, value):
         self.width, self.height = value
-        self._screen = pg.display.set_mode(value)
+        if self._screen.get_size() != value:
+            self._screen = pg.display.set_mode(value)
 
     def handle_events(self):
         for event in pg.event.get():
@@ -59,7 +60,7 @@ class Director(Ref):
                 else:
                     event_attributes["name"] = event_type
                 event = Event(event_attributes["name"], **event_attributes)
-
+                
                 self._scene.handle_events(event)  # 交互事件按Z轴传递
             elif event.type in OTHER_EVENTS:
                 event_attributes["name"] = OTHER_EVENTS[event.type]
@@ -101,6 +102,14 @@ class Director(Ref):
             self._scene.exit()
             self._scene = None
         self._scene = scene
+
+    def on_change_scene(self, event):
+        self.change_scene(scene_class_name=event.scene_name)
+        event.handled = True
+
+    def on_change_resolution(self, event): 
+        self.resolution = event.resolution
+        event.handled = True
 
     def init_scene(self, scene_pool):
         self.scene_class_pool = scene_pool

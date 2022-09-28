@@ -5,6 +5,7 @@ from pygame.locals import *
 class Event:
     def __init__(self, event_name, **kwargs):
         self.handled = False
+        self.processed = False
         self.name = event_name
         for key, value in kwargs.items():
             self.__setattr__(key, value)

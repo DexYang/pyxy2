@@ -6,7 +6,11 @@ config = configparser.ConfigParser()
 config.read("settings.ini", encoding="utf-8")
 
 XY2PATH = config["配置"].get("path")
+UI= config["配置"].get("ui")
+
 WindowSize = (800, 600)
+
+
 
 AnimationRate = 80
 RunningSpeed = 4

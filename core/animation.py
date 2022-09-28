@@ -8,14 +8,17 @@ class Frame:
         self.key_y = raw_frame["y"]
         self.width = raw_frame["width"]
         self.height = raw_frame["height"]
-        self.surface = pg.image.frombuffer(raw_frame["data"], (self.width, self.height), "RGBA").convert_alpha()
+        if raw_frame["data"] is None:
+            self.surface = None
+        else:
+            self.surface = pg.image.frombuffer(raw_frame["data"], (self.width, self.height), "RGBA").convert_alpha()
 
 
 class Animation:
     bright = pg.Surface((400, 400), flags=pg.SRCALPHA)
     bright.fill((80, 80, 80, 0))
 
-    def __init__(self, was, AnimationRate):
+    def __init__(self, was, AnimationRate = 100):
         self.direction_num = was.direction_num
         self.frame_num = was.frame_num
         self.key_x = was.x
@@ -72,12 +75,13 @@ class Animation:
     def set_direction(self, direction):
         self.direction = direction
 
-    def draw(self, screen, x, y, bright):
+    def draw(self, screen, x, y, bright=None):
         frame = self.get_current_frame()
-        surface = frame.surface.copy()
-        if bright:
-            surface.blit(self.bright, (0, 0), special_flags=pg.BLEND_RGB_ADD)
-        screen.blit(surface, (x - frame.key_x, y - frame.key_y))
+        if frame.surface:
+            surface = frame.surface.copy()
+            if bright:
+                surface.blit(self.bright, (0, 0), special_flags=pg.BLEND_RGB_ADD)
+            screen.blit(surface, (x - frame.key_x, y - frame.key_y))
 
     def get_at(self, x, y):
         surface = self.get_current_frame().surface

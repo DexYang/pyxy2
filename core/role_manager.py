@@ -25,7 +25,8 @@ class RoleManager(Ref):
         self.main_role.set_new_target(path_list, running)
 
     def load_into(self, scene):
-        scene.world_layer.add_child(self.main_role)
+        if hasattr(scene, "world_layer"):
+            scene.world_layer.add_child(self.main_role)
 
 
 role_manager = RoleManager()
