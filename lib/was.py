@@ -1,10 +1,9 @@
 from lib.pyxy2 import read_frame, read_pal
-from settings import XY2PATH
 
 
 class WAS:
     def __init__(self, path: str, offset: int = 0, size: int = 0, pal: bytes = None) -> None:
-        self.path = XY2PATH + path
+        self.path = path
         self.offset = offset
         self.size = size
 
@@ -37,40 +36,50 @@ class WAS:
         self.pal = read_pal(self.pal)
 
         self.pic_offsets = []
-        for _ in range(self.pic_num):
-            self.pic_offsets.append(self.get_32() + self.offset + 4 + self.head_size)
+        for i in range(self.pic_num):
+            offset = self.get_32()
+            if offset:
+                offset = offset + self.offset + 4 + self.head_size
+            self.pic_offsets.append(offset)
 
         self.frames = []
         for i in range(self.direction_num):
             self.frames.append([])
             for j in range(self.frame_num): 
                 index = i * self.frame_num + j
-                self.file.seek(self.pic_offsets[index])
+                if self.pic_offsets[index]:
+                    self.file.seek(self.pic_offsets[index])
 
-                _x = self.get_32()
-                _y = self.get_32()
-                _w = self.get_32()
-                _h = self.get_32()
+                    _x = self.get_32(True)
+                    _y = self.get_32(True)
+                    _w = self.get_32()
+                    _h = self.get_32()
 
-                frame_size: int
-                if index < self.pic_num - 1:
-                    frame_size = self.pic_offsets[index + 1] - self.pic_offsets[index]
+                    frame_size: int
+                    if index < self.pic_num - 1:
+                        frame_size = self.pic_offsets[index + 1] - self.pic_offsets[index]
+                    else:
+                        frame_size = self.size + self.offset - self.pic_offsets[index]
+
+                    if frame_size <= 0: 
+                        frame_size = self.size + self.offset - self.pic_offsets[index]
+
+                    self.file.seek(self.pic_offsets[index])
+                    buff = self.file.read(frame_size)
+                    
+                    data = read_frame(buff, self.pal, _w * _h * 4)
+
+                    frame = {"x": _x, "y": _y, "width": _w, "height": _h, "data": data}
+                    self.frames[i].append(frame)
                 else:
-                    frame_size = self.size + self.offset - self.pic_offsets[index]
-
-                self.file.seek(self.pic_offsets[index])
-                buff = self.file.read(frame_size)
-                
-                data = read_frame(buff, self.pal, _w * _h * 4)
-
-                frame = {"x": _x, "y": _y, "width": _w, "height": _h, "data": data}
-                self.frames[i].append(frame)
+                    frame = {"x": 0, "y": 0, "width": 0, "height": 0, "data": None}
+                    self.frames[i].append(frame)
     
         self.file.close()
 
         
-    def get_32(self) -> int:
-        return int.from_bytes(self.file.read(4), "little")
+    def get_32(self, signed=False) -> int:
+        return int.from_bytes(self.file.read(4), "little", signed=signed)
 
     def get_16(self) -> int:
         return int.from_bytes(self.file.read(2), "little")

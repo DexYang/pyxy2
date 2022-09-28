@@ -1,16 +1,15 @@
 from lib.was import WAS
 from lib.pyxy2 import get_hash_py
-from settings import XY2PATH
+
 
 class WDF:
     def __init__(self, wdf: str) -> None:
         self.wdf = wdf
-        self.path = XY2PATH + wdf
 
         self.n = 0
         self.hash_table = {}
 
-        self.file = open(self.path, 'rb')
+        self.file = open(self.wdf, 'rb')
         if self.file.read(4) != b'PFDW':  # WDF文件标志
             raise TypeError("Not WDF File")
         self.n = self.get_32()
@@ -36,8 +35,8 @@ class WDF:
             _hash = int(s, base=16)
         else:
             _hash = get_hash_py(s)
-
-        self.file = open(self.path, 'rb')
+        print(s, _hash)
+        self.file = open(self.wdf, 'rb')
         
         item = self.hash_table[_hash]
         self.file.seek(item["offset"])
@@ -46,7 +45,6 @@ class WDF:
 
         if flag == b'SP':
             return WAS(self.wdf, item["offset"], item["size"], pal)
-        
 
     def get_32(self) -> int:
         return int.from_bytes(self.file.read(4), "little")

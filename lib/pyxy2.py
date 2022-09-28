@@ -23,6 +23,7 @@ def read_frame(data, color_board, size):
     
     res = pyxy2.read_frame(data, color_board)
     _bytes = res.contents.raw
+    pyxy2.delete_array(res)
     return _bytes
 
 
