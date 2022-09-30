@@ -5,7 +5,7 @@ import pygame
 
 
 class StaticNode(Node):
-    def __init__(self, wdf, was_hash, name, x=0, y=0, z=0, animation_rate=100):
+    def __init__(self, wdf, was_hash, name, x=0, y=0, z=0):
 
         self.wdf = wdf
         self.was_hash = was_hash
@@ -13,7 +13,7 @@ class StaticNode(Node):
         self.surface = None
         self.item = res_manager.get(wdf, was_hash)
         if isinstance(self.item, WAS):
-            self.item = Animation(self.item, animation_rate)
+            self.item = Animation(self.item)
             self.surface = self.item.get_current_frame().surface
         else:
             self.surface = self.item

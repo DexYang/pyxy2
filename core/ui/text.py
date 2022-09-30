@@ -44,7 +44,7 @@ EMOTE_WDF = "gires.wdf"
 
 
 class Text(Node):
-    def __init__(self, text, x=0, y=0, w=0, h=0, z=0, fontname="font/HYC1GJM.ttf", font_size=18):
+    def __init__(self, text, x=0, y=0, w=0, h=0, z=0, fontname="font/simsun.ttc", font_size=14):
         super().__init__(text, x, y, w, h, z)
 
         self.text = text
@@ -53,8 +53,10 @@ class Text(Node):
         self.font_size = font_size
 
         self.line_space = 5
-
+        self.max_width = 0
         self.rebuild(self.translate(self.text))
+        self.first_line_emoji = False
+        
 
     def translate(self, text: str) -> List:
         content = []
@@ -167,6 +169,7 @@ class Text(Node):
                     text.line = i
                     self.add_child(text)
                 if x + c.w > self.w + 5:  # 宽度不足，换行
+                    self.max_width = max(self.max_width, x + c.w)
                     x = 0
                     i += 1
                     line_height_correcter[i] = c.h  # 新换行
@@ -203,6 +206,7 @@ class Text(Node):
                     text.clean()
                 elif c.mode == "enter": 
                     text.x = 0
+                    self.max_width = max(self.max_width, x)
                     x = 0
                     i += 1
                     line_height_correcter[i] = 0
@@ -210,6 +214,7 @@ class Text(Node):
                 char_len = self.font_size if self.is_chinese(c) else self.font_size // 2
                 if x + char_len > self.w:  # 宽度不足，换行
                     text.line = i
+                    self.max_width = max(self.max_width, x + char_len)
                     self.add_child(text)
                     x = 0
                     i += 1
@@ -222,9 +227,12 @@ class Text(Node):
         if not text.is_empty():
             text.line = i
             self.add_child(text)
+        self.max_width = max(self.max_width, x)
 
         y = 0
         for _i in range(i+1): 
+            if _i == 0:
+                self.first_line_emoji = line_height_correcter[_i] > self.font_size
             line_height = line_height_correcter[_i]
             line_height_correcter[_i] = (y, line_height)
             y += line_height + self.line_space
@@ -234,6 +242,7 @@ class Text(Node):
                 child.y = y + line_height - self.font_size
             elif isinstance(child, EmojiWrapper): 
                 child.y = y + line_height + 2
+        self.h = y
             
 
     @staticmethod
@@ -246,7 +255,10 @@ class Text(Node):
             return ModeWrapper(pattern[1])
 
     def update(self, context):
-        return self.update_children(context)
+        if self.hidden:
+            return
+        self.screen_rect = self.rect.move(*self.get_parent_screen_xy())
+        self.update_children(context)
 
     def draw(self, screen):
         return self.draw_children(screen) 

@@ -6,7 +6,8 @@ from core.ref import Ref
 from core.event import INTERACTIVE_EVENTS, OTHER_EVENTS, Event
 from lib.pyxy2 import end_loop
 import time
-from pygame.sprite import Sprite
+from core.ui.node import Root
+from core.ui.tip import Tip
 
 
 class Director(Ref):
@@ -30,6 +31,13 @@ class Director(Ref):
         pg.mouse.set_visible(False)
         self.mouse = Mouse(0, 0)
 
+        self.tip_layer = Root()
+        self.tip_x = 0
+        self.tip_y = 0
+        self.tip_count = 0
+        self.last_tip = 0
+        self.reset_tip(resolution)
+
     @property
     def title(self):
         return pg.display.get_caption()
@@ -47,6 +55,11 @@ class Director(Ref):
         self.width, self.height = value
         if self._screen.get_size() != value:
             self._screen = pg.display.set_mode(value)
+        self.reset_tip(value)
+
+    def reset_tip(self, resolution):
+        self.tip_x = resolution[0] // 2 - 150
+        self.tip_y = resolution[1] // 2 - 50
 
     def handle_events(self):
         for event in pg.event.get():
@@ -61,6 +74,7 @@ class Director(Ref):
                     event_attributes["name"] = event_type
                 event = Event(event_attributes["name"], **event_attributes)
                 
+                self.tip_layer.handle_events(event)
                 self._scene.handle_events(event)  # 交互事件按Z轴传递
             elif event.type in OTHER_EVENTS:
                 event_attributes["name"] = OTHER_EVENTS[event.type]
@@ -70,11 +84,13 @@ class Director(Ref):
 
     def update(self, context):
         self.mouse.update(context)
+        self.tip_layer.update(context)
         self._scene.update(context)
 
     def draw(self):
         self._screen.fill((70, 70, 70))
         self._scene.draw(self._screen)
+        self.tip_layer.draw(self._screen)
         self.mouse.draw(self._screen)
 
     def run(self, scene_class_name=None):
@@ -118,3 +134,17 @@ class Director(Ref):
         self.running = False
         end_loop()
         event.handled = True
+
+    def on_tip(self, event):
+        if self.tip_count >= 5: 
+            self.tip_count = 0
+            self.reset_tip(self.resolution)
+        ct = pg.time.get_ticks()
+        if ct - self.last_tip > 8000: 
+            self.tip_count = 0
+            self.reset_tip(self.resolution)
+        self.last_tip = ct
+        self.tip_layer.add_child(Tip(event.text, self.tip_x, self.tip_y))
+        self.tip_x += 20
+        self.tip_y += 20
+        self.tip_count += 1

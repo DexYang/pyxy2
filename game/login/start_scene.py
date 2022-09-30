@@ -27,7 +27,7 @@ class StartScene(LoginScene):
         self.ui_layer.add_child(self.进入游戏)
 
         self.注册账号 = Button(name="注册账号", **buttons["注册账号"])
-        self.注册账号.click = lambda : print("注册账号")
+        self.注册账号.click = lambda : self.emit("tip", text="#24#Y注册功能aaaaaaaaa#GQWEQWEQWEQWEQgggg滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚WEQWEQWEQ还没写呢#24#24#24")
         self.ui_layer.add_child(self.注册账号)
 
         self.退出游戏 = Button(name="退出游戏", **buttons["退出游戏"])

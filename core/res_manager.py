@@ -39,7 +39,7 @@ class ResManager:
         if isinstance(item, WAS):
             self.pool[name] = item
             return item
-        elif item.type == b'\x00':
+        elif item.type == b'\x00\x00':
             return pg.image.load(BytesIO(item.data), "tga")
         elif item.type == b'\x4d\x42':
             return pg.image.load(BytesIO(item.data), "bmp")

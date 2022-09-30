@@ -66,11 +66,13 @@ class Node(Ref):
     def update_children(self, context):
         if self.hidden:
             return
-        for child in self.children.values():
+        for child in list(self.children.values()):
             child.update(context)
             if child.useless:
                 child.parent = None
                 self.children.pop(child.name)
+                self.children_z[child.z].pop(child.name)
+                child.destroy()
 
     def draw_children(self, screen):
         if self.hidden:
@@ -104,7 +106,9 @@ class Node(Ref):
 
     def clear_children(self):
         for child in self.children.values():
+            child.parent = None
             child.clear_children()
+            child.destroy()
         self.children.clear()
         self.children_z.clear()
 
@@ -118,6 +122,7 @@ class Node(Ref):
 
     def __del__(self):
         self.clear_children()
+        self.parent = None
         super().__del__()
 
     def reset(self):  # 重置内部状态
