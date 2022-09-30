@@ -8,7 +8,7 @@ res = {
             "stick": {"wdf": "gires2.wdf", "was_hash": "login/stick.tcp", "x": 52, "y": 215, "z": 4}
         },
         "animation": {
-            "light": {"wdf": "gires2.wdf", "was_hash": "login/light.tcp", "x": 150, "y": 100, "z": 5},
+            "light": {"wdf": "gires2.wdf", "was_hash": "login/light.tcp", "x": 150, "y": 0, "z": 5},
             "fall": {"wdf": "gires2.wdf", "was_hash": "login/fall.tcp", "x": 342, "y": 203, "z": 0},
             "water": {"wdf": "gires2.wdf", "was_hash": "login/water.tcp", "x": 420, "y": 400, "z": 2},
             "dim": {"wdf": "gires2.wdf", "was_hash": "login/dim.tcp", "x": 356, "y": 187, "z": 3},

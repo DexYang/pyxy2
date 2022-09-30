@@ -2,6 +2,15 @@ from core.ref import Ref
 from core.role_manager import role_manager
 from core.ui.node import Root
 from settings import WindowSize
+import pygame
+from core.res_manager import res_manager
+from lib import pyfmodex
+from lib.pyfmodex.flags import MODE
+from lib.pyfmodex.structures import CREATESOUNDEXINFO
+system = pyfmodex.System()
+
+system.init()
+
 
 
 class Scene(Ref):
@@ -52,6 +61,8 @@ class LoginScene(Scene):
         self.title = ""
 
         self.ui_layer = Root()
+
+        self.music("music.wdf", "0x890BA81F")
 
         self.emit("change_resolution", resolution=(640, 480))
 

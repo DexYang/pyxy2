@@ -33,3 +33,10 @@ class StartScene(LoginScene):
         self.退出游戏 = Button(name="退出游戏", **buttons["退出游戏"])
         self.退出游戏.click = lambda : self.emit("quit")
         self.ui_layer.add_child(self.退出游戏)
+
+        self.play("gires2.wdf", "0xF7426640", True)  # 水流声
+    
+    def exit(self):
+        self.sound.stop_loop_sound()
+        super().exit()
+

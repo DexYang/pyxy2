@@ -4,10 +4,10 @@ from core.ref import Ref
 
 
 class Node(Ref):
-    def __init__(self, name, x=0, y=0, w=0, h=0, z=0):
+    def __init__(self, name=None, x=0, y=0, w=0, h=0, z=0):
         super().__init__()
 
-        self.name = name
+        self.name = name if name else str(self.id)
         
         self.rect = Rect((x, y), (w, h))  # 相对坐标
         self.x = x

@@ -10,6 +10,8 @@ from game.scenes.new_chang_an import NewChangAn
 from game.login.start_scene import StartScene
 from game.login.note_scene import NoteScene
 
+from core.ui.text import Text
+
 
 if __name__ == '__main__':
 

@@ -3,6 +3,8 @@ from data.login.note_scene import res
 from settings import UI
 from core.ui.button import Button
 from core.ui.static_node import StaticNode
+from core.ui.text import Text
+import os
 
 
 class NoteScene(LoginScene):
@@ -11,6 +13,10 @@ class NoteScene(LoginScene):
 
         self.scene_class_name = "游戏公告"
         self.title = "游戏公告"
+
+        f = open(os.getcwd() + '/res/note.txt', 'r', encoding='utf-8')
+        text = f.read()
+        f.close()
 
         backgorund = StaticNode(name="backgorund", **res[UI]["static"]["backgorund"])
         def right_click_bg(event):
@@ -32,3 +38,6 @@ class NoteScene(LoginScene):
         self.backbtn = Button(name="backbtn", **buttons["backbtn"])
         self.backbtn.click = lambda : print("backbtn")
         self.ui_layer.add_child(self.backbtn)
+
+        self.note = Text(text=text, x=33, y=65, w=485, h=350, z=100)
+        self.ui_layer.add_child(self.note)

@@ -1,5 +1,6 @@
 from lib.was import WAS
 from lib.pyxy2 import get_hash_py
+from utils.logger import logger
 
 
 class WDF:
@@ -35,19 +36,31 @@ class WDF:
             _hash = int(s, base=16)
         else:
             _hash = get_hash_py(s)
-        print(s, _hash)
-        self.file = open(self.wdf, 'rb')
+        logger.info("资源路径{}, {}, HASH值{}".format(self.wdf, s, _hash))
         
+        if _hash not in self.hash_table: 
+            logger.info("资源路径{}, {}, HASH值{} 不存在".format(self.wdf, s, _hash))
         item = self.hash_table[_hash]
-        self.file.seek(item["offset"])
-        flag = self.file.read(2)
-        self.file.close()
-
-        if flag == b'SP':
-            return WAS(self.wdf, item["offset"], item["size"], pal)
+        with open(self.wdf, 'rb') as file:
+            file.seek(item["offset"])
+            flag = file.read(2)
+        
+            if flag == b'SP':
+                return WAS(self.wdf, item["offset"], item["size"], pal)
+            else:
+                file.seek(item["offset"])
+                data = file.read(item["size"])
+                return WDFItem(flag, data, item["size"])
 
     def get_32(self) -> int:
         return int.from_bytes(self.file.read(4), "little")
 
     def get_16(self) -> int:
         return int.from_bytes(self.file.read(2), "little")
+
+
+class WDFItem: 
+    def __init__(self, _type, _data, _size):
+        self.type  = _type
+        self.data = _data
+        self.size = _size

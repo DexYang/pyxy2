@@ -17,7 +17,7 @@ from ctypes import *
 arch = platform.architecture()[0]
 if platform.system() == "Windows":
     try:
-        _dll = WinDLL("lib/fmod.dll")
+        _dll = WinDLL("lib/fmod64.dll")
     except Exception as exc:
         current_directory = os.path.dirname(os.path.realpath(sys.argv[0]))
         try:

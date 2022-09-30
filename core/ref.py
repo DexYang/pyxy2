@@ -1,6 +1,7 @@
 import uuid
 from utils.logger import logger
 from core.event_dispatcher import EVENT_DISPATCHER
+from core.sound_manager import SOUND_MANAGER
 
 
 class Ref:
@@ -9,6 +10,7 @@ class Ref:
         self.id = uuid.uuid1()
         self.__register()
         self.log = logger
+        self.sound = SOUND_MANAGER
 
     def notify(self, event_name, **kwargs):
         self.event_dispatcher.dispatch_event(event_name, **kwargs)
@@ -33,3 +35,9 @@ class Ref:
 
     def destroy(self):
         self.__del__()
+
+    def play(self, wdf, _hash, loop=False):
+        self.sound.play(wdf, _hash, loop)
+
+    def music(self, wdf, _hash):
+        self.sound.music(wdf, _hash)

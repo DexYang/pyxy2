@@ -39,21 +39,19 @@ class ResManager:
         if isinstance(item, WAS):
             self.pool[name] = item
             return item
-        elif item.type == int("0x0", 16):
+        elif item.type == b'\x00':
             return pg.image.load(BytesIO(item.data), "tga")
-        elif item.type == int("0x4d42", 16):
+        elif item.type == b'\x4d\x42':
             return pg.image.load(BytesIO(item.data), "bmp")
-        elif item.type == int("0xffd8", 16):
+        elif item.type == b'\xff\xd8':
             return pg.image.load(BytesIO(item.data), "jpg")
-        elif item.type == int("0x2050", 16):
+        elif item.type == b'\x20\x50':
             chats = []
             for c in item.data.split(b"\x50\x20\x4e\x0d\x0a")[1:]:
                 chats.append(c.decode("gbk"))
             return chats
-        elif item.type == int("0xf3ff", 16) or item.type == int("0x4952", 16):
-            return pg.mixer.Sound(BytesIO(item.data))
         else:
-            print("???")
+            return item
 
 
 res_manager = ResManager()
