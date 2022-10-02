@@ -17,6 +17,9 @@ res = {
             "进入游戏": {"wdf": "gires2.wdf", "was_hash": "login/btn_login.tcp", "x": 480, "y": 290},
             "注册账号": {"wdf": "gires2.wdf", "was_hash": "login/btn_register.tcp", "x": 480, "y": 340},
             "退出游戏": {"wdf": "gires2.wdf", "was_hash": "login/btn_exit.tcp", "x": 480, "y": 390}
+        },
+        "sound": {
+            "water_sound": {"wdf": "gires2.wdf", "was_hash": "0xF7426640", "loop": True}
         }
     }
 }

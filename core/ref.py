@@ -36,8 +36,8 @@ class Ref:
     def destroy(self):
         self.__del__()
 
-    def play(self, wdf, _hash, loop=False):
-        self.sound.play(wdf, _hash, loop)
+    def play(self, wdf, was_hash, loop=False):
+        self.sound.play(wdf, was_hash, loop)
 
-    def music(self, wdf, _hash):
-        self.sound.music(wdf, _hash)
+    def music(self, wdf, was_hash):
+        self.sound.music(wdf, was_hash)

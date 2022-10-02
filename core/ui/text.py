@@ -44,12 +44,12 @@ EMOTE_WDF = "gires.wdf"
 
 
 class Text(Node):
-    def __init__(self, text, x=0, y=0, w=0, h=0, z=0, fontname="font/simsun.ttc", font_size=14):
+    def __init__(self, text, x=0, y=0, w=0, h=0, z=0, fontname="", font_size=14):
         super().__init__(text, x, y, w, h, z)
 
         self.text = text
 
-        self.fontname = XY2PATH + fontname
+        self.fontname = fontname
         self.font_size = font_size
 
         self.line_space = 5
@@ -185,6 +185,7 @@ class Text(Node):
                 if not text.is_empty():
                     text.line = i
                     self.add_child(text)
+                    x += 2
                     newText = self.get_text(x, y, text)
                     text = newText
                 text.color = c.color
@@ -192,6 +193,7 @@ class Text(Node):
                 if not text.is_empty():
                     text.line = i
                     self.add_child(text)
+                    x += 2
                     text = self.get_text(x, y, text)
 
                 if c.mode == "bold": 
@@ -291,17 +293,19 @@ class ModeWrapper:
 class TextWrapper(Node):
     AnimationRate = 50
 
-    def __init__(self,  color="white", 
+    def __init__(self,  text = "",
+                        color="white", 
                         bold=False, 
                         italic=False,
                         blink=False,
                         underline=False,
                         fontname="",
-                        fontsize=16,
+                        fontsize=14,
                         x=0, y=0, w=0, h=0):
         super().__init__(x=x, y=y, w=w, h=h)
-        self.text = ""
+        
         self.len = 0
+        self.text = ''
     
         self.color = color
         self.bold = bold
@@ -309,13 +313,16 @@ class TextWrapper(Node):
         self.blink = blink
         self.underline = underline
         self.fontsize = fontsize
-        self.fontname = fontname
+        self.fontname = XY2PATH + fontname if fontname != "" else ""
 
         self.line = 0
 
         self.last_time = 0
         self.alpha = 1
         self.alpha_direction = 'down'
+
+        for x in text:
+            self.append(x)
     
     def update(self, context):
         super().update(context)
@@ -357,5 +364,12 @@ class TextWrapper(Node):
         self.blink = False
         self.underline = False
 
-    def draw(self, screen):
-        ptext.draw(self.text, pos=self.screen_rect.topleft, color=self.color, bold=self.bold, italic=self.italic, underline=self.underline, fontsize=self.fontsize, fontname=self.fontname, alpha=self.alpha)
+    def draw(self, screen=None, dx=0, dy=0):
+        if self.fontname == "":
+            ptext.draw(self.text, pos=(self.screen_rect.x + dx, self.screen_rect.y + dy), 
+                color=self.color, bold=self.bold, italic=self.italic, 
+                underline=self.underline, fontsize=self.fontsize, sysfontname="simsun", alpha=self.alpha)
+        else:
+            ptext.draw(self.text, pos=(self.screen_rect.x + dx, self.screen_rect.y + dy), 
+                color=self.color, bold=self.bold, italic=self.italic, 
+                underline=self.underline, fontsize=self.fontsize, fontname=self.fontname, alpha=self.alpha)

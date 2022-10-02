@@ -4,6 +4,7 @@ from settings import UI
 from core.ui.button import Button
 from core.ui.animation_node import AnimationNode
 from core.ui.static_node import StaticNode
+from core.ui.label_button import LabelButton
 
 
 class StartScene(LoginScene):
@@ -27,16 +28,16 @@ class StartScene(LoginScene):
         self.ui_layer.add_child(self.进入游戏)
 
         self.注册账号 = Button(name="注册账号", **buttons["注册账号"])
-        self.注册账号.click = lambda : self.emit("tip", text="#24#Y注册功能aaaaaaaaa#GQWEQWEQWEQWEQgggg滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚滚WEQWEQWEQ还没写呢#24#24#24")
+        self.注册账号.click = lambda : self.emit("tip", text="#24#Y注册功能还没写呢")
         self.ui_layer.add_child(self.注册账号)
 
         self.退出游戏 = Button(name="退出游戏", **buttons["退出游戏"])
-        self.退出游戏.click = lambda : self.emit("quit")
+        self.退出游戏.click = lambda : self.emit("exit")
         self.ui_layer.add_child(self.退出游戏)
 
-        self.play("gires2.wdf", "0xF7426640", True)  # 水流声
+        self.play(**res[UI]["sound"]["water_sound"])  # 水流声
     
     def exit(self):
-        self.sound.stop_loop_sound()
+        self.sound.stop_loop_sound(wdf=res[UI]["sound"]["water_sound"]["wdf"], was_hash=res[UI]["sound"]["water_sound"]["was_hash"])
         super().exit()
 

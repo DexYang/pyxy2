@@ -73,6 +73,8 @@ class World(Sprite):
 
         self.left_top = ()
 
+        self.update_count = 0
+
     def handle_events(self, event):
         self.children_handle_events(event)
         if not event.handled:
@@ -265,3 +267,7 @@ class World(Sprite):
 
     def draw_cell(self, screen):
         screen.blit(self.cell_surface, (0, 0), self.window)
+
+    def destroy(self):
+        super().destroy()
+        self.map.drop_map()

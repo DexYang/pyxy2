@@ -1,9 +1,11 @@
 import pygame as pg
 from pygame.locals import Rect
 from core.ref import Ref
+from settings import UI
 
 
 class Node(Ref):
+
     def __init__(self, name=None, x=0, y=0, w=0, h=0, z=0):
         super().__init__()
 
@@ -54,6 +56,9 @@ class Node(Ref):
             self.parent.child_z_update(self, self._z, z)
         self._z = z
 
+    def get_res(self, res, name): 
+        return {"wdf": res[UI][name]["wdf"], "was_hash": res[UI][name]["was_hash"]}
+
     def handle_events(self, event):
         if self.hidden:
             return
@@ -103,6 +108,9 @@ class Node(Ref):
                 if node.z not in self.children_z:
                     self.children_z[node.z] = {}
                 self.children_z[node.z][node.name] = node
+
+    def has_child(self, name): 
+        return name in self.children
 
     def clear_children(self):
         for child in self.children.values():

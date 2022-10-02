@@ -55,7 +55,6 @@ class Button(Node):
             event.processed = True
             self.click()
             self.play("sound.wdf", "0x4F8F2281")
-            self.emit("change_mouse_state", state_name = "normal")
         self.pressed = False
 
     def click(self, *args, **kwargs):

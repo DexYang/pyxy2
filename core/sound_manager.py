@@ -22,14 +22,14 @@ class SoundManager:
         self.music_wdf = ""
         self.music_hash = ""
 
-        self.loop_sound = []
+        self.loop_sound = {}
 
     def play(self, wdf, _hash, loop=False):
         sound = self.get_sound(wdf, _hash, loop)
         channel = sound.play()
         channel.volume = settings.SOUND / 100
         if loop:
-            self.loop_sound.append(channel)
+            self.loop_sound[(wdf, _hash)] = channel
 
     def music(self, wdf, _hash):
         if self.music_wdf == wdf and self.music_hash == _hash:
@@ -52,26 +52,30 @@ class SoundManager:
                             exinfo=CREATESOUNDEXINFO(length=item.size))
         return sound
 
-    def stop_loop_sound(self):
-        for sound in self.loop_sound:
-            if sound.is_playing:
-                sound.stop()
-        self.loop_sound = []
+    def stop_loop_sound(self, wdf="", was_hash=""):
+        if wdf == "":
+            self.loop_sound[(wdf, _hash)].stop()
+        else:
+            for channel in self.loop_sound.values():
+                if channel.is_playing:
+                    channel.stop()
+            self.loop_sound = {}
 
     def pause_loop_sound(self):
-        for sound in self.loop_sound:
-            sound.pause()
+        for channel in self.loop_sound.values():
+            channel.pause()
         settings.SOUND = -1
 
     def play_loop_sound(self):
         if settings.SOUND > 0:
-            for sound in self.loop_sound:
-                sound.play()       
+            for channel in self.loop_sound.values():
+                channel.play()
 
     def set_loop_sound_volume(self, volume):
-        for sound in self.loop_sound:
-            sound.volume = volume / 100
+        for channel in self.loop_sound.values():
+            channel.volume = volume / 100
         settings.SOUND = volume
+
 
     def stop_bgm(self):
         if self.bg_music:

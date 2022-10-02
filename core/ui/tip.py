@@ -97,6 +97,11 @@ class Tip(StaticNode):
             self._x = event.pos[0]
             self._y = event.pos[1]
 
+    def on_mouse_right_up(self, event): 
+        if self.screen_rect.collidepoint(*event.pos):
+            self.useless = True
+            self.pressed = False
+
     def on_mouse_motion(self, event): 
         if self.screen_rect.collidepoint(*event.pos):
             if self.pressed:

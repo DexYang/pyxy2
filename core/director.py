@@ -8,6 +8,7 @@ from lib.pyxy2 import end_loop
 import time
 from core.ui.node import Root
 from core.ui.tip import Tip
+from core.ui.quit_dialog import QuitDialog
 
 
 class Director(Ref):
@@ -32,11 +33,15 @@ class Director(Ref):
         self.mouse = Mouse(0, 0)
 
         self.tip_layer = Root()
+
         self.tip_x = 0
         self.tip_y = 0
         self.tip_count = 0
         self.last_tip = 0
         self.reset_tip(resolution)
+
+        self.quit_dialog = QuitDialog()
+        self.quit_dialog.hidden = True
 
     @property
     def title(self):
@@ -118,6 +123,7 @@ class Director(Ref):
             self._scene.exit()
             self._scene = None
         self._scene = scene
+        self.mouse.change_state("normal")
 
     def on_change_scene(self, event):
         self.change_scene(scene_class_name=event.scene_name)
@@ -131,6 +137,15 @@ class Director(Ref):
         self.scene_class_pool = scene_pool
 
     def on_quit(self, event):
+        self.quit_dialog.hidden = False
+        self.quit_dialog.x = (self.resolution[0] - self.quit_dialog.w) // 2
+        self.quit_dialog.y = (self.resolution[1] - self.quit_dialog.h) // 2
+
+        self.tip_layer.add_child(self.quit_dialog)
+        event.handled = True
+        
+
+    def on_exit(self, event): 
         self.running = False
         end_loop()
         event.handled = True
@@ -148,3 +163,4 @@ class Director(Ref):
         self.tip_x += 20
         self.tip_y += 20
         self.tip_count += 1
+        event.handled = True
