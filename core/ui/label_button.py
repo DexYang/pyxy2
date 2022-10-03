@@ -22,13 +22,13 @@ class LabelButton(Button):
     def draw(self, screen):
         if self.pressed:
             screen.blit(self.hover_pic, self.screen_rect)
-            self.label.draw(1, 1)
+            self.label.draw(screen, dx=1, dy=1)
         elif self.hover:
             screen.blit(self.pressed_pic, self.screen_rect)
-            self.label.draw()
+            self.label.draw(screen)
         else:
             screen.blit(self.normal_pic, self.screen_rect)
-            self.label.draw()
+            self.label.draw(screen)
     
 
 class LongLabelButton(LabelButton):

@@ -7,8 +7,6 @@ class Dialog(StaticNode):
     def __init__(self, wdf, was_hash, name, x=0, y=0, z=0):
         super().__init__(wdf, was_hash, name, x, y, z)
         self.pressed = False
-        self._x = 0
-        self._y = 0
 
     def update(self, context):
         if self.hidden:
@@ -23,20 +21,14 @@ class Dialog(StaticNode):
         self.draw_children(screen)
 
     def on_mouse_left_down(self, event): 
-        if self.screen_rect.collidepoint(*event.pos):
+        if not event.processed and self.screen_rect.collidepoint(*event.pos):
             self.pressed = True
-            event.handled = True
-            self._x = event.pos[0]
-            self._y = event.pos[1]
+            event.processed = True
 
     def on_mouse_motion(self, event): 
-        if self.screen_rect.collidepoint(*event.pos):
+        if not event.processed and self.screen_rect.collidepoint(*event.pos):
             if self.pressed:
-                delta_x = event.pos[0] - self._x
-                delta_y = event.pos[1] - self._y
-                self.rect.move_ip(delta_x, delta_y)
-                self._x = event.pos[0]
-                self._y = event.pos[1]
+                self.rect.move_ip(event.rel[0], event.rel[1])
             event.processed = True
 
     def on_mouse_left_up(self, event): 

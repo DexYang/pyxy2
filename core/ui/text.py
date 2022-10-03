@@ -52,10 +52,11 @@ class Text(Node):
         self.fontname = fontname
         self.font_size = font_size
 
+        self.first_line_emoji = False
         self.line_space = 5
         self.max_width = 0
         self.rebuild(self.translate(self.text))
-        self.first_line_emoji = False
+        
         
 
     def translate(self, text: str) -> List:
@@ -290,7 +291,23 @@ class ModeWrapper:
     def __init__(self, mode):
         self.mode = mode
 
+
 class TextWrapper(Node):
+    ColorTag = {
+        "#R": "red",
+        "#Y": "yellow",
+        "#G": "green",
+        "#K": "black",
+        "#W": "white",
+        "#B": "cyan",
+        "#P": "pink",
+        "#n": None
+    }
+    UnderlineTag = "#u"
+    BoldTag = "#d"
+    ItalicTag = "#i"
+
+
     AnimationRate = 50
 
     def __init__(self,  text = "",
@@ -367,9 +384,11 @@ class TextWrapper(Node):
     def draw(self, screen=None, dx=0, dy=0):
         if self.fontname == "":
             ptext.draw(self.text, pos=(self.screen_rect.x + dx, self.screen_rect.y + dy), 
-                color=self.color, bold=self.bold, italic=self.italic, 
-                underline=self.underline, fontsize=self.fontsize, sysfontname="simsun", alpha=self.alpha)
+                color=self.color, bold=self.bold, italic=self.italic, surf=screen,
+                underline=self.underline, fontsize=self.fontsize, sysfontname="simsun", alpha=self.alpha,
+                colortag=self.ColorTag, underlinetag=self.UnderlineTag, boldtag=self.BoldTag, italictag=self.ItalicTag)
         else:
             ptext.draw(self.text, pos=(self.screen_rect.x + dx, self.screen_rect.y + dy), 
-                color=self.color, bold=self.bold, italic=self.italic, 
-                underline=self.underline, fontsize=self.fontsize, fontname=self.fontname, alpha=self.alpha)
+                color=self.color, bold=self.bold, italic=self.italic, surf=screen,
+                underline=self.underline, fontsize=self.fontsize, fontname=self.fontname, alpha=self.alpha,
+                colortag=self.ColorTag, underlinetag=self.UnderlineTag, boldtag=self.BoldTag, italictag=self.ItalicTag)

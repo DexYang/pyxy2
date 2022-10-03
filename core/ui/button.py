@@ -44,14 +44,13 @@ class Button(Node):
             self.emit("change_mouse_state", state_name = "normal")
         self.hover = False
         
-
     def on_mouse_left_down(self, event): 
-        if self.is_in(event.pos): 
+        if not event.processed and self.is_in(event.pos): 
             self.pressed = True
-            event.handled = True
+            event.processed = True
         
     def on_mouse_left_up(self, event): 
-        if self.pressed and self.is_in(event.pos): 
+        if not event.processed and self.pressed and self.is_in(event.pos): 
             event.processed = True
             self.click()
             self.play("sound.wdf", "0x4F8F2281")

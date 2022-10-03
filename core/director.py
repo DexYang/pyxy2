@@ -1,3 +1,4 @@
+from cmath import e
 import pygame as pg
 from pygame.locals import USEREVENT
 
@@ -66,8 +67,8 @@ class Director(Ref):
         self.tip_x = resolution[0] // 2 - 150
         self.tip_y = resolution[1] // 2 - 50
 
-    def handle_events(self):
-        for event in pg.event.get():
+    def handle_events(self, events):
+        for event in events:
             event_attributes = event.__dict__
             if event.type in INTERACTIVE_EVENTS:
                 event_type = INTERACTIVE_EVENTS[event.type]
@@ -104,10 +105,13 @@ class Director(Ref):
 
         context = Context()
         while self.running:
+            events = pg.event.get()
+
+            context.set_events(events)
             context.set_mouse_pos(pg.mouse.get_pos())
             context.set_time(self.clock.tick(self.fps), pg.time.get_ticks())
 
-            self.handle_events()
+            self.handle_events(events)
 
             self.update(context)
 

@@ -26,7 +26,9 @@ INTERACTIVE_EVENTS = {
         2: "mouse_mid_up",
         3: "mouse_right_up",
     },
-    MOUSEMOTION: "mouse_motion"
+    MOUSEMOTION: "mouse_motion",
+    TEXTEDITING: "text_editing",
+    TEXTINPUT: "text_input"
 }
 
 OTHER_EVENTS = {

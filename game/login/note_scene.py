@@ -20,7 +20,7 @@ class NoteScene(LoginScene):
 
         backgorund = StaticNode(name="backgorund", **res[UI]["static"]["backgorund"])
         def right_click_bg(event):
-            self.emit("change_scene", scene_name="OldChangAnScene") 
+            self.emit("change_scene", scene_name="LoginScene") 
             event.handled = True
         backgorund.on_mouse_right_up = right_click_bg
         self.ui_layer.add_child(backgorund)

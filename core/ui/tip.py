@@ -14,15 +14,13 @@ class Tip(StaticNode):
         self.vertical_mul = max(self.text.h // 20 + 1, 1)
         self.scale9(self.horizon_mul, self.vertical_mul)
 
-        self.text.x = (320 - self.text.max_width) // 2 + 10
-        self.text.y = 8 if self.text.first_line_emoji else 15
+        self.text.x = (320 - self.text.max_width) // 2
+        self.text.y = 12 if self.text.first_line_emoji else 22
 
         self.start_time = 0
         self.just_init = True
 
         self.pressed = False
-        self._x = 0
-        self._y = 0
 
     def update(self, context):
         if self.just_init:
@@ -86,28 +84,23 @@ class Tip(StaticNode):
         self.rect.height = self.h
 
     def on_mouse_left_up(self, event):
-        if self.screen_rect.collidepoint(*event.pos):
+        if not event.processed and self.screen_rect.collidepoint(*event.pos):
             self.useless = True
             self.pressed = False
+            event.processed = True
 
     def on_mouse_left_down(self, event): 
-        if self.screen_rect.collidepoint(*event.pos):
+        if not event.processed and self.screen_rect.collidepoint(*event.pos):
             self.pressed = True
-            event.handled = True
-            self._x = event.pos[0]
-            self._y = event.pos[1]
+            event.processed = True
+
+    def on_mouse_motion(self, event): 
+        if not event.processed and self.screen_rect.collidepoint(*event.pos):
+            if self.pressed:
+                self.rect.move_ip(event.rel[0], event.rel[1])
+            event.processed = True
 
     def on_mouse_right_up(self, event): 
         if self.screen_rect.collidepoint(*event.pos):
             self.useless = True
-            self.pressed = False
-
-    def on_mouse_motion(self, event): 
-        if self.screen_rect.collidepoint(*event.pos):
-            if self.pressed:
-                delta_x = event.pos[0] - self._x
-                delta_y = event.pos[1] - self._y
-                self.rect.move_ip(delta_x, delta_y)
-                self._x = event.pos[0]
-                self._y = event.pos[1]
-            event.processed = True
+            event.handled = False

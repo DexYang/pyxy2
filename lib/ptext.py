@@ -34,18 +34,10 @@ DEFAULT_ANCHOR = 0, 0  # 0, 0 = top left ;  1, 1 = bottom right
 DEFAULT_STRIP = True
 ALPHA_RESOLUTION = 16
 ANGLE_RESOLUTION_DEGREES = 3
-DEFAULT_UNDERLINE_TAG = "#u"
-DEFAULT_BOLD_TAG = "#d"
-DEFAULT_ITALIC_TAG = "#i"
+DEFAULT_UNDERLINE_TAG = "*^U"
+DEFAULT_BOLD_TAG = "*^B"
+DEFAULT_ITALIC_TAG = "*^I"
 DEFAULT_COLOR_TAG = {
-	"#R": "red",
-	"#Y": "yellow",
-	"#G": "green",
-	"#K": "black",
-	"#W": "white",
-	"#B": "cyan",
-	"#P": "pink",
-	"#n": None
 }
 
 AUTO_CLEAN = True

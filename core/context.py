@@ -13,6 +13,14 @@ class Context:
         self.mouse_x = 0
         self.mouse_y = 0
 
+        self.events = []
+
+    def set_events(self, events):
+        self.events = events
+
+    def get_events(self):
+        return self.events
+
     def set_time(self, delta_time, current_time):
         self.delta_time = delta_time
         self.current_time = current_time

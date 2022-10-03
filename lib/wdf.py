@@ -36,7 +36,7 @@ class WDF:
             _hash = int(s, base=16)
         else:
             _hash = get_hash_py(s)
-        logger.info("资源路径{}, {}, HASH值{}".format(self.wdf, s, _hash))
+        logger.info("资源路径{}, {}, HASH值{}".format(self.wdf, s, hex(_hash)))
         
         if _hash not in self.hash_table: 
             logger.info("资源路径{}, {}, HASH值{} 不存在".format(self.wdf, s, _hash))

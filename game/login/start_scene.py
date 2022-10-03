@@ -4,7 +4,7 @@ from settings import UI
 from core.ui.button import Button
 from core.ui.animation_node import AnimationNode
 from core.ui.static_node import StaticNode
-from core.ui.label_button import LabelButton
+from core.ui.input import Input
 
 
 class StartScene(LoginScene):
