@@ -10,6 +10,7 @@ from game.scenes.new_chang_an import NewChangAn
 from game.login.start_scene import StartScene
 from game.login.note_scene import NoteScene
 from game.login.login_scene import GameLoginScene
+from game.login.role_select import RoleSelect
 
 from core.ui.text import Text
 
@@ -22,6 +23,7 @@ if __name__ == '__main__':
         "StartScene": StartScene,
         "NoteScene": NoteScene,
         "LoginScene": GameLoginScene,
+        "RoleSelect": RoleSelect,
         "OldChangAnScene": OldChangAn,
         "NewChangAnScene": NewChangAn
     })

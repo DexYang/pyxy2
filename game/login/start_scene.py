@@ -4,7 +4,8 @@ from settings import UI
 from core.ui.button import Button
 from core.ui.animation_node import AnimationNode
 from core.ui.static_node import StaticNode
-from core.ui.input import Input
+from core.ui.one_pic_button import OnePicButton
+from core.ui.text_button import TextButton
 
 
 class StartScene(LoginScene):
@@ -36,6 +37,18 @@ class StartScene(LoginScene):
         self.ui_layer.add_child(self.退出游戏)
 
         self.play(**res[UI]["sound"]["water_sound"])  # 水流声
+        
+        # self.pic_button = OnePicButton("photo.wdf", "facesmall/1.tga")
+        # self.ui_layer.add_child(self.pic_button)
+        # def pic_button_click():
+        #     self.pic_button.selected = True
+        # self.pic_button.click = pic_button_click
+        
+        # self.text_button = TextButton("测试按钮", x=100, y = 100, normal="")
+        # self.ui_layer.add_child(self.text_button)
+        # def text_button_click():
+        #     self.pic_button.selected = False
+        # self.text_button.click = text_button_click
     
     def exit(self):
         self.sound.stop_loop_sound(wdf=res[UI]["sound"]["water_sound"]["wdf"], was_hash=res[UI]["sound"]["water_sound"]["was_hash"])

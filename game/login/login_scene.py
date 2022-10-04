@@ -19,7 +19,7 @@ class GameLoginScene(LoginScene):
 
         buttons = res[UI]["buttons"]
         self.登录 = Button(name="登录", **buttons["登录"])
-        self.登录.click = lambda : self.emit("change_scene", scene_name="OldChangAnScene")
+        self.登录.click = lambda : self.emit("change_scene", scene_name="RoleSelect")
         self.ui_layer.add_child(self.登录)
 
         self.取消 = Button(name="取消", **buttons["取消"])

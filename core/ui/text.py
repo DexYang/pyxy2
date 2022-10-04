@@ -10,7 +10,7 @@ pattern = re.compile(r'[0-9a-fA-F]{6}')
 
 TEMPLATES = {
     "#R": ["color", "red"],
-    "#G": ["color", "green"],
+    "#G": ["color", (0, 220, 0)],
     "#B": ["color", "cyan"],
     "#K": ["color", "black"],
     "#Y": ["color", "yellow"],
@@ -56,8 +56,6 @@ class Text(Node):
         self.line_space = 5
         self.max_width = 0
         self.rebuild(self.translate(self.text))
-        
-        
 
     def translate(self, text: str) -> List:
         content = []
