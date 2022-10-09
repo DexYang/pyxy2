@@ -2,14 +2,6 @@ from core.ref import Ref
 from core.role_manager import role_manager
 from core.ui.node import Root
 from settings import WindowSize
-import pygame
-from core.res_manager import res_manager
-from lib import pyfmodex
-from lib.pyfmodex.flags import MODE
-from lib.pyfmodex.structures import CREATESOUNDEXINFO
-system = pyfmodex.System()
-
-system.init()
 
 
 

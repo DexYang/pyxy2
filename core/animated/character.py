@@ -21,7 +21,7 @@ class Character(AnimatedSprite):
         self.character = characters[char_id]
         super().__init__(x, y)
         
-        self.角色名 = self.character["角色名"]
+        self.角色名 = self.character["名称"]
         self.种族 = self.character["种族"]
         self.性别 = self.character["性别"]
         self.门派 = self.character["门派"]

@@ -4,12 +4,13 @@ from core.res_manager import res_manager
 
 
 class AnimationNode(Node):
-    animation_rate = 100
 
-    def __init__(self, wdf, was_hash, name=None, x=0, y=0, z=0):
+    def __init__(self, wdf, was_hash, name=None, x=0, y=0, z=0, animation_rate=100):
 
         self.wdf = wdf
         self.was_hash = was_hash
+
+        self.animation_rate = animation_rate
 
         self.ani = Animation(res_manager.get(wdf, was_hash), self.animation_rate)
 

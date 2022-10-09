@@ -1,3 +1,5 @@
+
+import types
 from core.ui.node import Node
 from core.animation import Animation
 from core.res_manager import res_manager
@@ -58,5 +60,8 @@ class Button(Node):
 
     def click(self, *args, **kwargs):
         pass
+
+    def method(self, f): 
+        return types.MethodType(f, self)
 
     

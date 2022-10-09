@@ -21,7 +21,7 @@ class RoleSelect(LoginScene):
         
         buttons = res[UI]["buttons"]
         self.创建按钮 = Button(name="创建按钮", **buttons["创建按钮"])
-        self.创建按钮.click = lambda : self.emit("tip", text="#24#Y创建功能还没写呢")
+        self.创建按钮.click = lambda : self.emit("change_scene", scene_name="RoleCreate")
         self.ui_layer.add_child(self.创建按钮)
 
         self.取消按钮 = Button(name="取消按钮", **buttons["取消按钮"])

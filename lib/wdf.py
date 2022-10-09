@@ -30,13 +30,16 @@ class WDF:
 
         self.file.close()
 
-    def get(self, s: str, pal: bytes = None):
-        _hash: int
-        if s.startswith("0x"):
-            _hash = int(s, base=16)
-        else:
-            _hash = get_hash_py(s)
-        logger.info("资源路径{}, {}, HASH值{}".format(self.wdf, s, hex(_hash)))
+    def get(self, path_or_hash: str, pal: bytes = None):
+        if isinstance(path_or_hash, int): 
+            _hash = path_or_hash
+        else: 
+            _hash: int
+            if path_or_hash.startswith("0x"):
+                _hash = int(path_or_hash, base=16)
+            else:
+                _hash = get_hash_py(path_or_hash)
+        logger.info("资源路径{}, {}, HASH值{}".format(self.wdf, path_or_hash, hex(_hash)))
         
         if _hash not in self.hash_table: 
             logger.info("资源路径{}, {}, HASH值{} 不存在".format(self.wdf, s, _hash))

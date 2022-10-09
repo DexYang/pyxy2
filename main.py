@@ -11,6 +11,7 @@ from game.login.start_scene import StartScene
 from game.login.note_scene import NoteScene
 from game.login.login_scene import GameLoginScene
 from game.login.role_select import RoleSelect
+from game.login.role_create import RoleCreate
 
 from core.ui.text import Text
 
@@ -24,6 +25,7 @@ if __name__ == '__main__':
         "NoteScene": NoteScene,
         "LoginScene": GameLoginScene,
         "RoleSelect": RoleSelect,
+        "RoleCreate": RoleCreate,
         "OldChangAnScene": OldChangAn,
         "NewChangAnScene": NewChangAn
     })
@@ -36,4 +38,4 @@ if __name__ == '__main__':
 
     role_manager.main_role = role
 
-    director.run("StartScene")
+    director.run("RoleCreate")
