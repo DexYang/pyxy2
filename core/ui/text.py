@@ -1,3 +1,4 @@
+from turtle import width
 from typing import List
 
 from core.ui.node import Node
@@ -44,7 +45,7 @@ EMOTE_WDF = "gires.wdf"
 
 
 class Text(Node):
-    def __init__(self, text, x=0, y=0, w=0, h=0, z=0, fontname="", font_size=14):
+    def __init__(self, text, x=0, y=0, w=0, h=0, z=0, fontname="", font_size=14, line_space=5):
         super().__init__(text, x, y, w, h, z)
 
         self.text = text
@@ -53,8 +54,13 @@ class Text(Node):
         self.font_size = font_size
 
         self.first_line_emoji = False
-        self.line_space = 5
+        self.line_space = line_space
         self.max_width = 0
+        self.rebuild(self.translate(self.text))
+
+    def set_text(self, text):
+        self.clear_children()
+        self.text = text
         self.rebuild(self.translate(self.text))
 
     def translate(self, text: str) -> List:
@@ -316,8 +322,8 @@ class TextWrapper(Node):
                         underline=False,
                         fontname="",
                         fontsize=14,
-                        x=0, y=0, w=0, h=0):
-        super().__init__(x=x, y=y, w=w, h=h)
+                        x=0, y=0, w=0, h=0, z=0):
+        super().__init__(x=x, y=y, w=w, h=h, z=z)
         
         self.len = 0
         self.text = ''
@@ -338,9 +344,17 @@ class TextWrapper(Node):
 
         for x in text:
             self.append(x)
+
+    def set_text(self, text):
+        self.text = ''
+        self.len = 0
+        for x in text:
+            self.append(x)
     
     def update(self, context):
-        super().update(context)
+        if self.hidden:
+            return
+        self.screen_rect = self.rect.move(*self.get_parent_screen_xy())
         if self.blink:
             current_time = context.get_current_time()
             if current_time > self.last_time + self.AnimationRate:
@@ -380,13 +394,17 @@ class TextWrapper(Node):
         self.underline = False
 
     def draw(self, screen=None, dx=0, dy=0):
+        if self.hidden:
+            return
         if self.fontname == "":
             ptext.draw(self.text, pos=(self.screen_rect.x + dx, self.screen_rect.y + dy), 
                 color=self.color, bold=self.bold, italic=self.italic, surf=screen,
+                width=self.w,
                 underline=self.underline, fontsize=self.fontsize, sysfontname="simsun", alpha=self.alpha,
                 colortag=self.ColorTag, underlinetag=self.UnderlineTag, boldtag=self.BoldTag, italictag=self.ItalicTag)
         else:
             ptext.draw(self.text, pos=(self.screen_rect.x + dx, self.screen_rect.y + dy), 
                 color=self.color, bold=self.bold, italic=self.italic, surf=screen,
+                width=self.w,
                 underline=self.underline, fontsize=self.fontsize, fontname=self.fontname, alpha=self.alpha,
                 colortag=self.ColorTag, underlinetag=self.UnderlineTag, boldtag=self.BoldTag, italictag=self.ItalicTag)

@@ -1,7 +1,7 @@
 res = {
     "红木": {
         "static": {
-            "backgorund": {"wdf": "gires2.wdf", "was_hash": "0x4B291E02", "x": 0, "y": 0, "z": 1}
+            "backgorund": {"wdf": "gires2.wdf", "was_hash": "0x4B291E02", "x": 0, "y": 0}
         },
         "buttons": {
             "创建按钮": {"wdf": "gires2.wdf", "was_hash": "login/create.tca", "x": 524, "y": 325},

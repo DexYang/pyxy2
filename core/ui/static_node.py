@@ -5,7 +5,7 @@ import pygame
 
 
 class StaticNode(Node):
-    def __init__(self, wdf, was_hash, name, x=0, y=0, z=0):
+    def __init__(self, wdf, was_hash, name=None, x=0, y=0, z=0):
 
         self.wdf = wdf
         self.was_hash = was_hash
@@ -24,3 +24,17 @@ class StaticNode(Node):
         if self.hidden:
             return
         screen.blit(self.surface, self.screen_rect)
+
+
+class StaticText(StaticNode):
+    def update(self, context):
+        if self.hidden:
+            return
+        self.screen_rect = self.rect.move(*self.get_parent_screen_xy())
+        self.update_children(context)
+
+    def draw(self, screen):
+        if self.hidden:
+            return
+        screen.blit(self.surface, self.screen_rect)
+        self.draw_children(screen)

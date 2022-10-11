@@ -637,7 +637,8 @@ def _breaktext(text, width, font, canbreakatstart = False):
 		atbreak, napp = False, ""
 		# Space and hyphen character allow for a breakpoint.
 		if c in [" ", "-"]:
-			atbreak = True
+			pass
+			# atbreak = True
 		# Non-breaking space. No breakpoint here. Instead just add a space.
 		elif c == "\u00A0":
 			c = " "

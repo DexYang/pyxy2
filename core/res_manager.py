@@ -1,3 +1,4 @@
+from distutils import filelist
 import os
 import time
 import pygame as pg
@@ -24,23 +25,25 @@ class ResManager:
         self.travel(XY2PATH)
 
     def travel(self, filepath):
-        for file in os.scandir(filepath):
-            if file.is_file():
-                index = file.name.find(".wd")
-                if index != -1:
-                    orgin_name = file.name 
-                    wdf_name = file.name[:index]
-                    try:
-                        if orgin_name not in self.wdfs:
-                            self.wdfs[orgin_name] = WDF(XY2PATH + orgin_name)
-                        if wdf_name not in self.wdf_hash:
-                            self.wdf_hash[wdf_name] = {}
-                        for _hash in self.wdfs[orgin_name].hash_table.keys():
-                            self.wdf_hash[wdf_name][_hash] = orgin_name
-                    except TypeError:
-                        continue
+        file_list = list(filter(lambda item: item.is_file() and item.name.find(".wd") != -1, list(os.scandir(filepath))))
+        file_list.sort(key=lambda item: item.name[-1] if item.name[-1] != 'f' else '0')
+        
+        for file in file_list:
+            origin_name = file.name 
+            wdf_name = file.name[:-4]
+            try:
+                if origin_name not in self.wdfs:
+                    self.wdfs[origin_name] = WDF(XY2PATH + origin_name)
+                if wdf_name not in self.wdf_hash:
+                    self.wdf_hash[wdf_name] = {}
+                for _hash in self.wdfs[origin_name].hash_table.keys():
+                    if _hash not in self.wdf_hash[wdf_name]:
+                        self.wdf_hash[wdf_name][_hash] = []
+                    self.wdf_hash[wdf_name][_hash].append(origin_name)
+            except TypeError:
+                continue
 
-    def get(self, wdf: str, path_or_hash, name="", pal=None):
+    def get(self, wdf: str, path_or_hash, name="", pal=None, oldFirst=True):
         now = time.time()
         if name == "":
             name = wdf + ":" + path_or_hash
@@ -76,7 +79,7 @@ class ResManager:
                 if _hash not in self.wdf_hash[wdf]: 
                     logger.info("Hash或者Path不存在: " + path_or_hash)
                     return 
-                origin_wdf = self.wdf_hash[wdf][_hash]
+                origin_wdf = self.wdf_hash[wdf][_hash][0 if oldFirst else -1]
                 item = self.wdfs[origin_wdf].get(path_or_hash, pal)
         
         if isinstance(item, WAS):

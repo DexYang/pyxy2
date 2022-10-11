@@ -15,7 +15,7 @@ REPEAT = {
 }
 
 class Input(Node):
-    def __init__(self, font_size=14, text_color=(255, 255, 255), no_chinese=False, x=0, y=0, w=0, h=0, z=0):
+    def __init__(self, font_size=14, text_color=(255, 255, 255), no_chinese=False, x=0, y=0, w=0, h=16, z=0):
         super().__init__(None, x, y, w, h, z)
 
         self.font = freetype.SysFont("simsun", font_size)
@@ -55,7 +55,7 @@ class Input(Node):
                 self.last_time = current
 
             if self.cursor != 0:
-                tsurf, _ = ptext.draw(text=self.text[:self.cursor], pos=(0, 0), surf=self.surface, sysfontname="simsun")
+                tsurf, _ = ptext.draw(text=self.text[:self.cursor], pos=(0, 0), surf=self.surface, sysfontname="simsun", fontsize=self.font_size)
                 self.cursor_pixel_len = tsurf.get_rect().w
             else:
                 self.cursor_pixel_len = 0
@@ -79,12 +79,13 @@ class Input(Node):
     def draw(self, screen):
         if self.hidden:
             return
-        pg.draw.rect(screen, (255, 0, 0), self.screen_rect)
+        pg.draw.rect(screen, (255, 0, 0), self.screen_rect, width=2)
         if self.text:
             self.surface.fill((0, 0, 0, 0))
             ptext.draw( text=self.text, 
                         pos=(-self.slide_window_left, 0), 
                         surf=self.surface,
+                        fontsize=self.font_size,
                         color=self.text_color, sysfontname="simsun")
             screen.blit(self.surface, self.screen_rect)
         if self.focus and self.show_blink:
@@ -112,7 +113,7 @@ class Input(Node):
 
     def on_text_input(self, event):
         if self.focus:
-            text = "".join([c for c in event.text if not self.is_chinese(c)])
+            text = "".join([c for c in event.text if not self.no_chinese or not self.is_chinese(c)])
             self.text = self.text[:self.cursor] + text + self.text[self.cursor:]
             self.cursor += len(text)
             event.handled = True
