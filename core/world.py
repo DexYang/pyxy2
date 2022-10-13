@@ -1,4 +1,5 @@
 import math
+import os
 
 import pygame as pg
 from pygame.locals import Rect
@@ -12,16 +13,20 @@ from core.animated.throwaway import Throwaway
 
 from lib.map import Map
 
-from settings import WindowSize
+from settings import WindowSize, XY2PATH
 
 
 class World(Sprite):
-    def __init__(self, map_version, map_id, left=0, top=0):
+    def __init__(self, map_id, left=0, top=0):
         super().__init__()
 
-        self.map_version = map_version
         self.map_id = map_id  # scene/1001.map
-        self.map_path = map_version + '/' + str(map_id) + '.map'
+        
+        if os.path.exists(XY2PATH + 'scene/' + str(map_id) + '.map'):
+            self.map_version = 'scene'
+        elif os.path.exists(XY2PATH + 'newscene/' + str(map_id) + '.map'):
+            self.map_version = 'newscene'
+        self.map_path = XY2PATH + self.map_version + '/' + str(map_id) + '.map'
 
         self.map = Map(self.map_path)
         self.rect = Rect((0, 0), (self.map.width, self.map.height))  # 整个地图范围

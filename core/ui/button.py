@@ -6,8 +6,8 @@ from core.res_manager import res_manager
 
 
 class Button(Node):
-    def __init__(self, wdf, was_hash, name, x=0, y=0, z=100):
-        
+    def __init__(self, wdf, was_hash, name, value=None, x=0, y=0, z=100):
+        self.value = value
 
         self.wdf = wdf
         self.was_hash = was_hash

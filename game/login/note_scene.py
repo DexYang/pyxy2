@@ -8,8 +8,8 @@ import os
 
 
 class NoteScene(LoginScene):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self.scene_class_name = "游戏公告"
         self.title = "游戏公告"
@@ -36,7 +36,7 @@ class NoteScene(LoginScene):
         self.ui_layer.add_child(self.ldown)
 
         self.backbtn = Button(name="backbtn", **buttons["backbtn"])
-        self.backbtn.click = lambda : print("backbtn")
+        self.backbtn.click = lambda : self.emit("change_scene", scene_name="LoginScene") 
         self.ui_layer.add_child(self.backbtn)
 
         self.note = Text(text=text, x=33, y=65, w=485, h=350, z=100)

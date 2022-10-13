@@ -14,6 +14,7 @@ REPEAT = {
     K_RIGHT
 }
 
+
 class Input(Node):
     def __init__(self, font_size=14, text_color=(255, 255, 255), no_chinese=False, x=0, y=0, w=0, h=16, z=0):
         super().__init__(None, x, y, w, h, z)

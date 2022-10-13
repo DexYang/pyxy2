@@ -34,7 +34,7 @@ class Dialog(StaticNode):
     def on_mouse_left_up(self, event): 
         self.pressed = False
 
-    def on_mouse_right_down(self, event): 
+    def on_mouse_right_up(self, event): 
         if self.screen_rect.collidepoint(*event.pos):
             self.hidden = True
             event.handled = True
@@ -43,3 +43,28 @@ class Dialog(StaticNode):
 class Confirm(Dialog):
     def __init__(self, name, x=0, y=0, z=0):
         super().__init__(**self.get_res(dialog_res, "confirm"), name=name, x=x, y=y, z=z)
+
+
+class ModalDialog(Dialog):
+    def __init__(self, wdf, was_hash, name, x=0, y=0, z=9999):
+        super().__init__(wdf, was_hash, name, x, y, z)
+
+    def on_mouse_left_down(self, event): 
+        if not event.processed and self.screen_rect.collidepoint(*event.pos):
+            self.pressed = True
+        event.handled = True
+
+    def on_mouse_motion(self, event): 
+        if not event.processed and self.screen_rect.collidepoint(*event.pos):
+            if self.pressed:
+                self.rect.move_ip(event.rel[0], event.rel[1])
+        event.handled = True
+
+    def on_mouse_left_up(self, event): 
+        self.pressed = False
+        self.handled = True
+
+    def on_mouse_right_up(self, event): 
+        if self.screen_rect.collidepoint(*event.pos):
+            self.hidden = True
+        event.handled = True

@@ -2,11 +2,11 @@ from core.ref import Ref
 from core.role_manager import role_manager
 from core.ui.node import Root
 from settings import WindowSize
-
+from core.world import World
 
 
 class Scene(Ref):
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         super().__init__()
 
         self.scene_class_name = ""
@@ -46,7 +46,7 @@ class Scene(Ref):
 
 
 class LoginScene(Scene):
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         Ref.__init__(self)
 
         self.scene_class_name = ""
@@ -72,3 +72,9 @@ class LoginScene(Scene):
 
     def exit(self):
         self.ui_layer.destroy()
+
+
+class WorldScene(Scene):
+    def __init__(self, map_id, *args, **kwargs):
+        super().__init__()
+        self.world_layer = World(map_id)

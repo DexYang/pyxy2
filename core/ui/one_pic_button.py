@@ -6,7 +6,7 @@ import pygame
 
 
 class OnePicButton(Button):
-    def __init__(self, wdf, was_hash, name=None, selected=False, x=0, y=0, z=100):
+    def __init__(self, wdf, was_hash, name=None, selected=False, value=None, x=0, y=0, z=100):
         
         self.wdf = wdf
         self.was_hash = was_hash
@@ -14,6 +14,7 @@ class OnePicButton(Button):
         self.hover = False
         self.pressed = False
         self.selected = selected
+        self.value = value
 
         self.item = res_manager.get(wdf, was_hash)
         if isinstance(self.item, WAS):

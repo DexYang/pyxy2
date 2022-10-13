@@ -31,7 +31,7 @@ DEFAULT_SHADOW_COLOR = "black"
 SHADOW_UNIT = 1 / 18
 DEFAULT_ALIGN = "left"  # left, center, or right
 DEFAULT_ANCHOR = 0, 0  # 0, 0 = top left ;  1, 1 = bottom right
-DEFAULT_STRIP = True
+DEFAULT_STRIP = False
 ALPHA_RESOLUTION = 16
 ANGLE_RESOLUTION_DEGREES = 3
 DEFAULT_UNDERLINE_TAG = "*^U"

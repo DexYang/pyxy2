@@ -8,7 +8,7 @@ from settings import XY2PATH
 class Map:
     def __init__(self, path):
         self.path = path
-        self.map_path = XY2PATH + path
+        self.map_path = path
 
         map_info = get_map_info_py(self.map_path)
 

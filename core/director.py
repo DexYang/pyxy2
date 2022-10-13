@@ -107,7 +107,6 @@ class Director(Ref):
         while self.running:
             events = pg.event.get()
 
-            context.set_events(events)
             context.set_mouse_pos(pg.mouse.get_pos())
             context.set_time(self.clock.tick(self.fps), pg.time.get_ticks())
 
@@ -119,8 +118,8 @@ class Director(Ref):
 
             pg.display.update()
 
-    def change_scene(self, scene_class_name):
-        scene = self.scene_class_pool[scene_class_name]()
+    def change_scene(self, scene_class_name, *args, **kwargs):
+        scene = self.scene_class_pool[scene_class_name](*args, **kwargs)
         scene.enter()
 
         if self._scene:
@@ -130,7 +129,7 @@ class Director(Ref):
         self.mouse.change_state("normal")
 
     def on_change_scene(self, event):
-        self.change_scene(scene_class_name=event.scene_name)
+        self.change_scene(scene_class_name=event.scene_name, **event.__dict__)
         event.handled = True
 
     def on_change_resolution(self, event): 

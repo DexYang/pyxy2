@@ -1,4 +1,6 @@
 from core.ref import Ref
+from db.role import get_roles, create_roles
+from core.animated.character import Character
 
 
 class RoleManager(Ref):
@@ -11,7 +13,28 @@ class RoleManager(Ref):
 
     def __init__(self):
         super().__init__()
+        self.username = None
+        self.roles = {}
         self._main_role = None
+
+    def login(self, username):
+        self.username = username
+        self.roles = {}
+
+    def get_roles(self):
+        if not self.username:
+            return self.emit("tip", text="#Y用户未登录")
+        db_roles = get_roles(self.username)
+        self.roles = {}
+        for r in db_roles: 
+            self.roles[r.doc_id] = r
+
+    def create_role(self, role):
+        create_roles(self.username, role)
+
+    def select(self, role_id):
+        self.main_role  = Character(self.roles[role_id]["shape"], self.roles[role_id]["x"], self.roles[role_id]["y"])
+        self.emit("change_scene", scene_name="World", map_id=self.roles[role_id]["map_id"])
 
     @property
     def main_role(self):

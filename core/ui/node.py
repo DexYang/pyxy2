@@ -62,7 +62,7 @@ class Node(Ref):
     def handle_events(self, event):
         if self.hidden:
             return
-        for child in self.children.values():
+        for child in list(self.children.values()):
             child.handle_events(event)
             if event.handled == True:
                 return

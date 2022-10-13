@@ -60,7 +60,7 @@ class Text(Node):
 
     def set_text(self, text):
         self.clear_children()
-        self.text = text
+        self.text = str(text)
         self.rebuild(self.translate(self.text))
 
     def translate(self, text: str) -> List:

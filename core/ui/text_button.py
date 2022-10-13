@@ -3,7 +3,8 @@ from core.ui.text import Text
 
 
 class TextButton(Button):
-    def __init__(self, text, fontname="", normal="#G", hover="#Y", font_size=14, x=0, y=0, z=100):
+    def __init__(self, text, fontname="", normal="#G", hover="#Y", font_size=14, value=None, x=0, y=0, z=100):
+        self.value = value
 
         self.hover = False
         self.pressed = False

@@ -6,8 +6,8 @@ from settings import UI
 
 
 class LabelButton(Button):
-    def __init__(self, wdf, was_hash, label, x=0, y=0, z=100):
-        super().__init__(wdf, was_hash, label, x, y, z)
+    def __init__(self, wdf, was_hash, label, value=None, x=0, y=0, z=100):
+        super().__init__(wdf, was_hash, label, value, x, y, z)
 
         self.label = TextWrapper(label, color=(210, 210, 0), fontname="font/fzls.ttf", fontsize=18)
         self.label.x = (self.w - self.label.len) // 2

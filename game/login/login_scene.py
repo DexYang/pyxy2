@@ -4,11 +4,13 @@ from settings import UI
 from core.ui.button import Button
 from core.ui.static_node import StaticNode
 from core.ui.input import Input
+from db.user import get_user
+from core.role_manager import role_manager
 
 
 class GameLoginScene(LoginScene):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self.scene_class_name = "LoginScene"
         self.title = "游戏登录"
@@ -19,7 +21,7 @@ class GameLoginScene(LoginScene):
 
         buttons = res[UI]["buttons"]
         self.登录 = Button(name="登录", **buttons["登录"])
-        self.登录.click = lambda : self.emit("change_scene", scene_name="RoleSelect")
+        self.登录.click = lambda : self.login()
         self.ui_layer.add_child(self.登录)
 
         self.取消 = Button(name="取消", **buttons["取消"])
@@ -35,4 +37,17 @@ class GameLoginScene(LoginScene):
 
     def on_text_enter(self, event):
         if event.input_id == self.username.id: 
-            self.emit("tip", text="#Y输入的账号是: "+ self.username.get())
+            self.login()
+
+    def login(self): 
+        username = self.username.get()
+        if not username: 
+            self.emit("tip", text="#Y请输入用户名")
+            return
+        user = get_user(username)
+        if not user: 
+            self.emit("tip", text="#Y用户不存在: "+ username)
+        else: 
+            self.emit("tip", text="#Y欢迎回来 #38"+ username)
+            role_manager.login(username)
+            self.emit("change_scene", scene_name="RoleSelect")
