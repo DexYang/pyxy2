@@ -6,11 +6,11 @@
 # db = TinyDB(path="D:/test.json")
 
 
-from db.user import add_user, get_user, user_table
+# from db.user import add_user, get_user, user_table
 
-# print(add_user("test"))
-user = get_user("username")
-print(user.doc_id)
+# # print(add_user("test"))
+# user = get_user("username")
+# print(user.doc_id)
 
 
 # from slpp import slpp as lua
@@ -19,3 +19,11 @@ print(user.doc_id)
 # }"""
 
 # print(lua.decode(code))
+
+from distutils.core import setup
+from Cython.Build import cythonize
+
+setup(
+  name = 'Hello world app',
+  ext_modules = cythonize("settings.py"),
+)

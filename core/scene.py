@@ -72,9 +72,3 @@ class LoginScene(Scene):
 
     def exit(self):
         self.ui_layer.destroy()
-
-
-class WorldScene(Scene):
-    def __init__(self, map_id, *args, **kwargs):
-        super().__init__()
-        self.world_layer = World(map_id)

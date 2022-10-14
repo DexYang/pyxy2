@@ -1,10 +1,11 @@
 from core.scene import LoginScene
 from data.login.login_scene import res
-from settings import UI
+from db import role
+from settings import UI, DefaultUser
 from core.ui.button import Button
 from core.ui.static_node import StaticNode
 from core.ui.input import Input
-from db.user import get_user
+from db.user import get_user, add_user
 from core.role_manager import role_manager
 
 
@@ -42,12 +43,15 @@ class GameLoginScene(LoginScene):
     def login(self): 
         username = self.username.get()
         if not username: 
-            self.emit("tip", text="#Y请输入用户名")
-            return
+            username = DefaultUser
         user = get_user(username)
         if not user: 
-            self.emit("tip", text="#Y用户不存在: "+ username)
-        else: 
-            self.emit("tip", text="#Y欢迎回来 #38"+ username)
-            role_manager.login(username)
-            self.emit("change_scene", scene_name="RoleSelect")
+            if username == DefaultUser:
+                add_user(DefaultUser)
+            else:
+                self.emit("tip", text="#Y用户不存在: "+ username)
+                return
+        s = username if username != DefaultUser else ''
+        self.emit("tip", text="#Y欢迎回来 #38"+ s)
+        role_manager.login(username)
+        self.emit("change_scene", scene_name="RoleSelect")

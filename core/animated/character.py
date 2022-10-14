@@ -16,17 +16,13 @@ class Character(AnimatedSprite):
     WDF = "shape.wdf"
     WAS = "char/{:04d}/{}.tcp"
 
-    def __init__(self, char_id: int, x=0, y=0):
+    def __init__(self, char_id: int, data: dict, x=0, y=0):
         self.char_id = char_id
         self.character = characters[char_id]
-        super().__init__(x, y)
         
-        self.角色名 = self.character["角色名"]
-        self.种族 = self.character["种族"]
-        self.性别 = self.character["性别"]
-        self.门派 = self.character["门派"]
+        self.data = data
 
-        self.武器 = list(self.character["武器"].keys())[0]
+        super().__init__(x, y)
 
         self.target = (0, 0)
         self.target_list = []
@@ -34,6 +30,24 @@ class Character(AnimatedSprite):
         self.is_running = False
 
         self.mask = None
+    
+    @property
+    def x(self):  # x y为世界坐标，因为ani在draw时，已经减去锚点，实际上xy是人物锚点（人物脚底）
+        return self.rect.x
+
+    @property
+    def y(self):
+        return self.rect.y
+
+    @x.setter
+    def x(self, x):
+        self.rect.x = x
+        self.data["x"] = x
+
+    @y.setter
+    def y(self, y):
+        self.rect.y = y
+        self.data["y"] = y
 
     def get_res(self, state_name, state_type):
         if state_type == "normal":

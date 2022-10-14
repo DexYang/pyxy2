@@ -1,4 +1,5 @@
 from cmath import e
+import imp
 import pygame as pg
 from pygame.locals import USEREVENT
 
@@ -10,6 +11,7 @@ import time
 from core.ui.node import Root
 from core.ui.tip import Tip
 from core.ui.quit_dialog import QuitDialog
+from core.role_manager import role_manager
 
 
 class Director(Ref):
@@ -43,6 +45,11 @@ class Director(Ref):
 
         self.quit_dialog = QuitDialog()
         self.quit_dialog.hidden = True
+
+        self.time_passes = 0
+        self.last_30s = 0
+        self.last_60s = 0
+        self.last_120s = 0
 
     @property
     def title(self):
@@ -108,7 +115,19 @@ class Director(Ref):
             events = pg.event.get()
 
             context.set_mouse_pos(pg.mouse.get_pos())
-            context.set_time(self.clock.tick(self.fps), pg.time.get_ticks())
+            self.time_passes = pg.time.get_ticks()
+
+            context.set_time(self.clock.tick(self.fps), self.time_passes)
+
+            if self.time_passes - self.last_30s > 30000:
+                self.last_30s = self.time_passes
+                self.notify("every_30s")
+            if self.time_passes - self.last_60s > 60000:
+                self.last_60s = self.time_passes
+                self.notify("every_60s")
+            if self.time_passes - self.last_120s > 120000:
+                self.last_120s = self.time_passes
+                self.notify("every_120s")
 
             self.handle_events(events)
 
@@ -146,10 +165,10 @@ class Director(Ref):
 
         self.tip_layer.add_child(self.quit_dialog)
         event.handled = True
-        
 
     def on_exit(self, event): 
         self.running = False
+        role_manager.logout()
         end_loop()
         event.handled = True
 

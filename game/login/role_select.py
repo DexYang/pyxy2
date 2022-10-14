@@ -95,5 +95,5 @@ class RoleSelect(LoginScene):
         if self.selected == 0:
             self.emit("tip", text="#Y请先创建角色")
             return
-        role_manager.select(self.selected)
+        role_manager.enter_world(self.selected)
         

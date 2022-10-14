@@ -73,7 +73,7 @@ class World(Sprite):
         for i in range(self.window_row_num):
             self.heads[i] = {}
             for j in range(self.window_col_num):
-                self.heads[i][j] = None
+                self.heads[i][j] = {}
         self.children_in_window = []
 
         self.left_top = ()
@@ -97,7 +97,7 @@ class World(Sprite):
     def new_target(self, event, running):
         target = (self.window.left + event.pos[0], self.window.top + event.pos[1])
         path_list = self.map.find_path((role_manager.main_role.x, role_manager.main_role.y), target)
-        role_manager.set_main_role_new_target(path_list, running)
+        role_manager.main_role.set_new_target(path_list, running)
         event.handled = True
 
         self.add_child(Throwaway("gires.wdf", "scene/walkpoint.tca", target[0], target[1]))
@@ -181,31 +181,18 @@ class World(Sprite):
         for i in range(row, row + 2):
             for j in range(col, col + 2):
                 if i in self.heads and j in self.heads[i]:
-                    head = self.heads[i][j]
-                    while head:
-                        head.update(context)
-                        _next = head.next
-                        if isinstance(head, Character):  #
-                            self.character_update_z_under_mask(head)
-                        tmp_row, tmp_col = self.get_window_index(head.x, head.y)
-                        if tmp_row != i or tmp_col != j or head.useless:
-                            if head.pre:
-                                head.pre.next = head.next
-                            if head.next:
-                                head.next.pre = head.pre
-
-                            if not head.pre:
-                                self.heads[i][j] = head.next
-
-                            head.pre = None
-                            head.next = None
-                            if head.useless is not None:
-                                self.add_child(head)
-                        
-                        if not head.useless:
-                            self.children_in_window.append(head)
-
-                        head = _next
+                    objs_list = list(self.heads[i][j].values())
+                    for obj in objs_list:
+                        obj.update(context)
+                        if isinstance(obj, Character):
+                            self.character_update_z_under_mask(obj)
+                        tmp_row, tmp_col = self.get_window_index(obj.x, obj.y)
+                        if tmp_row != i or tmp_col != j or obj.useless:
+                            self.heads[i][j].pop(obj.id)
+                            if not obj.useless:
+                                self.add_child(obj)
+                        if not obj.useless:
+                            self.children_in_window.append(obj)
         self.children_in_window.sort(key=lambda item: item.z)
 
     def children_handle_events(self, event):
@@ -213,11 +200,9 @@ class World(Sprite):
         for i in range(row, row + 2):
             for j in range(col, col + 2):
                 if i in self.heads and j in self.heads[i] and self.heads[i][j]:
-                    self.heads[i][j].handle_event(event)
-                    head = self.heads[i][j]
-                    while head:
-                        head.handle_event(event)
-                        head = head.next
+                    objs_list = list(self.heads[i][j].values())
+                    for obj in objs_list:
+                        obj.handle_event(event)
                         if event.handled:
                             return
 
@@ -235,10 +220,7 @@ class World(Sprite):
 
     def add_child(self, child):
         row, col = self.get_window_index(child.x, child.y)
-        if self.heads[row][col] is not None:
-            child.next = self.heads[row][col]
-            self.heads[row][col].pre = child
-        self.heads[row][col] = child
+        self.heads[row][col][child.id] = child
 
     def get_window_index(self, x, y):
         row = min(max(math.floor(y / WindowSize[1]), 0), self.window_row_num - 1)

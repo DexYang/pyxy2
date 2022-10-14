@@ -14,7 +14,7 @@ SOUND = int(config["配置"].get("sound"))
 WindowSize = (800, 600)
 
 
-
+DefaultUser = "_default"
 AnimationRate = 80
 RunningSpeed = 4
 WalkingSpeed = 2
