@@ -42,7 +42,7 @@ class WDF:
         logger.info("资源路径{}, {}, HASH值{}".format(self.wdf, path_or_hash, hex(_hash)))
         
         if _hash not in self.hash_table: 
-            logger.info("资源路径{}, {}, HASH值{} 不存在".format(self.wdf, s, _hash))
+            logger.info("资源路径{}, {}, HASH值{} 不存在".format(self.wdf, path_or_hash, _hash))
         item = self.hash_table[_hash]
         with open(self.wdf, 'rb') as file:
             file.seek(item["offset"])

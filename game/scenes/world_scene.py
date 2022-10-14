@@ -11,7 +11,7 @@ class WorldScene(Scene):
         self.world_layer = World(map_id)
 
         try:
-            portals = importlib.import_module('game.scenes.'+str(map_id)+".portal").portal
+            portals = importlib.import_module('game.scenes.'+str(map_id)).portal
             for p in portals:
                 self.world_layer.add_child(p)
         except Exception as e:
