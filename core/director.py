@@ -1,17 +1,19 @@
-from cmath import e
-import imp
+import random
 import pygame as pg
 from pygame.locals import USEREVENT
 
 from core.context import Context
 from core.ref import Ref
 from core.event import INTERACTIVE_EVENTS, OTHER_EVENTS, Event
-from lib.pyxy2 import end_loop
+
 import time
 from core.ui.node import Root
 from core.ui.tip import Tip
 from core.ui.quit_dialog import QuitDialog
 from core.role_manager import role_manager
+
+from lib.pyxy2 import end_loop
+from utils import transitions
 
 
 class Director(Ref):
@@ -50,6 +52,11 @@ class Director(Ref):
         self.last_30s = 0
         self.last_60s = 0
         self.last_120s = 0
+        
+        self.transition = transitions
+        self.transition_choices = ['fadeOutUp', 'fadeOutDown', 'fadeOut', 'fadeOut', 'fadeOut',
+                                   'moveUp', 'moveDown', 'moveLeft', 'moveRight', 'moveUpLeft', 'moveUpRight']
+        self.transition.init(self._screen, *self.resolution)
 
     @property
     def title(self):
@@ -134,10 +141,18 @@ class Director(Ref):
             self.update(context)
 
             self.draw()
+            
+            self.transition.update_screen()
 
             pg.display.update()
 
-    def change_scene(self, scene_class_name, *args, **kwargs):
+    def change_scene(self, scene_class_name, transition=None, *args, **kwargs):
+        
+        self.transition.init(self._screen, *self.resolution)
+        if not transition:
+            transition = random.choice(self.transition_choices)
+        self.transition.run(transition, 0.7)
+        
         scene = self.scene_class_pool[scene_class_name](*args, **kwargs)
         scene.enter()
 
