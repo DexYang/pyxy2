@@ -38,3 +38,12 @@ class StaticText(StaticNode):
             return
         screen.blit(self.surface, self.screen_rect)
         self.draw_children(screen)
+        
+        
+class ExtWidthStatic(StaticNode):
+    def __init__(self, wdf, was_hash, name=None, x=0, y=0, z=0, w=0):
+        super().__init__(wdf, was_hash, name, x, y, z)
+        
+        if w >= self.w:
+            temp_surface = pygame.surface.Surface((w, self.h), flags=pygame.SRCALPHA)
+            
