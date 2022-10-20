@@ -75,6 +75,7 @@ class World(Sprite):
             for j in range(self.window_col_num):
                 self.heads[i][j] = {}
         self.children_in_window = []
+        self.up_layer = {}
 
         self.left_top = ()
 
@@ -100,7 +101,7 @@ class World(Sprite):
         role_manager.main_role.set_new_target(path_list, running)
         event.handled = True
 
-        self.add_child(Throwaway("gires.wdf", "scene/walkpoint.tca", target[0], target[1]))
+        self.add_to_up_layer(Throwaway("gires.wdf", "scene/walkpoint.tca", target[0], target[1]))
 
     def update(self, context):
         main_role = role_manager.main_role
@@ -109,6 +110,17 @@ class World(Sprite):
         self.left_top = self.window.left, self.window.top
         self.map_update(context)
         self.children_update(context)
+        self.up_layer_update(context)
+        
+    def up_layer_update(self, context):
+        for item in list(self.up_layer.values()):
+            item.update(context)
+            if item.useless:
+                self.up_layer.pop(item.id)
+                item.destroy()
+
+    def add_to_up_layer(self, item):
+        self.up_layer[item.id] = item
 
     def map_update(self, context):
         self.mask_in_window = []
@@ -191,6 +203,8 @@ class World(Sprite):
                             self.heads[i][j].pop(obj.id)
                             if not obj.useless:
                                 self.add_child(obj)
+                            else:
+                                obj.destroy()
                         if not obj.useless:
                             self.children_in_window.append(obj)
         self.children_in_window.sort(key=lambda item: item.z)
@@ -245,6 +259,10 @@ class World(Sprite):
         for item in render_items:
             item.draw(area)
         screen.blit(area, (0, 0))
+
+        for item in list(self.up_layer.values()):
+            item.draw(screen)
+        
 
     def blit_cell(self):
         for i in range(self.map.cell_row_count):

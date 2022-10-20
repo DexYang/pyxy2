@@ -1,3 +1,4 @@
+import re
 import pygame as pg
 from pygame.locals import Rect
 from core.ref import Ref
@@ -7,6 +8,7 @@ from settings import UI
 class Node(Ref):
 
     def __init__(self, name=None, x=0, y=0, w=0, h=0, z=0):
+        self._z = z
         super().__init__()
 
         self.name = name if name else str(self.id)
@@ -15,7 +17,7 @@ class Node(Ref):
         self.x = x
         self.y = y
         self.screen_rect = Rect((x, y), (w, h))
-        self._z = z
+        
         self.w = w
         self.h = h
 
@@ -56,18 +58,27 @@ class Node(Ref):
             self.parent.child_z_update(self, self._z, z)
         self._z = z
 
+    def __register(self):
+        if self.z >= 0:
+            self.__travel_handler(self.event_dispatcher.register_event)
+
     def get_res(self, res, name): 
         return {"wdf": res[UI][name]["wdf"], "was_hash": res[UI][name]["was_hash"]}
 
     def handle_events(self, event):
         if self.hidden:
             return
-        for child in list(self.children.values()):
-            child.handle_events(event)
-            if event.handled == True:
-                return
+        z_order = list(self.children_z.keys())
+        z_order.sort(reverse=True)
+        for z in z_order:
+            if z < 0:
+                break
+            for child in self.children_z[z].values():
+                child.handle_events(event)
+                if event.handled == True:
+                    return
         return self.handle_event(event)
-
+            
     def update_children(self, context):
         if self.hidden:
             return
@@ -144,10 +155,7 @@ class Node(Ref):
     def is_in(self, pos): 
         return self.screen_rect.collidepoint(*pos)
 
-class Root(Node):
-    def __init__(self):
-        super().__init__("root")
-
+class Blank(Node):
     def update(self, context): 
         self.update_children(context)
 

@@ -1,6 +1,6 @@
 from core.ref import Ref
 from core.role_manager import role_manager
-from core.ui.node import Root
+from core.ui.node import Blank
 from settings import WindowSize
 from core.world import World
 
@@ -12,9 +12,9 @@ class Scene(Ref):
         self.scene_class_name = ""
         self.title = ""
 
-        self.win_layer = Root()
+        self.win_layer = Blank()
 
-        self.ui_layer = Root()
+        self.ui_layer = Blank()
 
         self.world_layer = None
 
@@ -22,7 +22,11 @@ class Scene(Ref):
 
     def handle_events(self, event):
         self.win_layer.handle_events(event)
+        if event.handled:
+            return
         self.ui_layer.handle_events(event)
+        if event.processed or event.handled:
+            return
         self.world_layer.handle_events(event)
 
     def update(self, context):
@@ -52,7 +56,7 @@ class LoginScene(Scene):
         self.scene_class_name = ""
         self.title = ""
 
-        self.ui_layer = Root()
+        self.ui_layer = Blank()
 
         self.music("music.wdf", "0x890BA81F")
 

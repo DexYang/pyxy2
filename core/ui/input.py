@@ -44,6 +44,8 @@ class Input(Node):
 
         self.no_chinese = no_chinese
 
+        self.padding_top = max(0, (h - font_size) // 2)
+
     def update(self, context):
         if self.hidden:
             return
@@ -84,7 +86,7 @@ class Input(Node):
         if self.text:
             self.surface.fill((0, 0, 0, 0))
             ptext.draw( text=self.text, 
-                        pos=(-self.slide_window_left, 0), 
+                        pos=(-self.slide_window_left, self.padding_top), 
                         surf=self.surface,
                         fontsize=self.font_size,
                         color=self.text_color, sysfontname="simsun")

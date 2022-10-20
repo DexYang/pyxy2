@@ -7,7 +7,7 @@ from core.ref import Ref
 from core.event import INTERACTIVE_EVENTS, OTHER_EVENTS, Event
 
 import time
-from core.ui.node import Root
+from core.ui.node import Blank
 from core.ui.tip import Tip
 from core.ui.quit_dialog import QuitDialog
 from core.role_manager import role_manager
@@ -28,6 +28,7 @@ class Director(Ref):
 
         self.running = True
         self._screen = pg.display.set_mode(resolution)
+        pg.display.set_icon(pg.image.load('ico.ico'))
 
         self.scene_class_pool = {}
         self._scene = None
@@ -37,7 +38,7 @@ class Director(Ref):
         pg.mouse.set_visible(False)
         self.mouse = Mouse(0, 0)
 
-        self.tip_layer = Root()
+        self.tip_layer = Blank()
 
         self.tip_x = 0
         self.tip_y = 0

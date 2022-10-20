@@ -17,12 +17,14 @@ class QuitDialog(Confirm):
         self.cancel_button = LongLabelButton(label="继续游戏", x=230, y=85)
         def cancel_click(): 
             self.hidden = True
+            self.emit("change_mouse_state", state_name = "normal")
         self.cancel_button.click = cancel_click
         self.add_child(self.cancel_button)
 
         self.return_button = LongLabelButton(label="到主画面", x=130, y=85)
         def return_click(): 
             self.emit("change_scene", scene_name="StartScene")
+            self.emit("change_mouse_state", state_name = "normal")
             self.hidden = True
         self.return_button.click = return_click
         self.add_child(self.return_button)

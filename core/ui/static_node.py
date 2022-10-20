@@ -45,5 +45,6 @@ class ExtWidthStatic(StaticNode):
         super().__init__(wdf, was_hash, name, x, y, z)
         
         if w >= self.w:
-            temp_surface = pygame.surface.Surface((w, self.h), flags=pygame.SRCALPHA)
+            self.w = w
+            self.surface = pygame.transform.smoothscale(self.surface, (w, self.h))
             
