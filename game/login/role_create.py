@@ -9,7 +9,9 @@ from data.character import characters, 种族, 性别
 from core.ui.text import Text
 from core.ui.input import Input
 from core.role_manager import role_manager
+
 from db.role import exist_role_name
+from data.json.角色 import get
 
 
 class RoleCreate(LoginScene):
@@ -126,24 +128,7 @@ class RoleCreate(LoginScene):
         if exist_role_name(role_name):
             self.emit("tip", text="角色名称已存在")
             return
-        role = {
-            "shape": self.selected,
-            "photo": self.selected,
-            "name": role_name,
-            "角色名": characters[self.selected]['角色名'],
-            "性别": characters[self.selected]['性别'],
-            "种族": characters[self.selected]['种族'],
-            "门派": characters[self.selected]['门派'],
-            "武器": characters[self.selected]['武器'],
-            "等级": 0,
-            "转生": 0,
-            "银子": 100000,
-            "存银": 0,
-            "战绩": 0,
-            "声望": 0,
-            "map_id": 1001,
-            "x": 5100,
-            "y": 4200
-        }
+        role = get(self.selected, role_name)
+        
         role_manager.create_role(role)
         self.emit("change_scene", scene_name="RoleSelect")

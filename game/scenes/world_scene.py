@@ -7,6 +7,7 @@ from core.ui.static_node import StaticNode, ExtWidthStatic
 from core.ui.input import Input
 
 from .quic_buttons import get_quic_buttons
+from .state import 气血条, 法力条, 经验条
 
 from data.world.ui import res 
 from settings import UI, WindowSize
@@ -31,14 +32,33 @@ class WorldScene(Scene):
             self.ui_layer.add_child(StaticNode(name=k, **v))
 
         # 状态
-        keys = list(res[UI]["状态"].keys())
         x = WindowSize[0]
-        for k in range(len(keys) - 1, -1, -1):
-            v = res[UI]["状态"][keys[k]]
-            static = StaticNode(name=keys[k], **v)
-            static.x = x - static.w
-            x -= static.w
-            self.ui_layer.add_child(static)
+        static = StaticNode(name="人面板", **res[UI]["状态"]["人面板"])
+        static.x = x - static.w
+        x -= static.w
+        self.ui_layer.add_child(static)
+        self.经验条 = 经验条(**res[UI]["state"]["人经验"], x=x, y=5)
+        self.ui_layer.add_child(self.经验条)
+        self.气血条 = 气血条(**res[UI]["state"]["人血"], x=x, y=20)
+        self.ui_layer.add_child(self.气血条)
+        self.法力条 = 法力条(**res[UI]["state"]["人法"], x=x, y=35)
+        self.ui_layer.add_child(self.法力条)
+
+        static = StaticNode(name="头像框", **res[UI]["状态"]["头像框"])
+        static.x = x - static.w
+        x -= static.w
+        self.ui_layer.add_child(static)
+
+        static = StaticNode(name="兽面板", **res[UI]["状态"]["兽面板"])
+        static.x = x - static.w
+        x -= static.w
+        self.ui_layer.add_child(static)
+        self.召唤兽经验条 = 经验条(**res[UI]["state"]["兽经验"], x=x+42, y=4)
+        self.ui_layer.add_child(self.召唤兽经验条)
+        self.召唤兽气血条 = 气血条(**res[UI]["state"]["兽血"], x=x+42, y=15)
+        self.ui_layer.add_child(self.召唤兽气血条)
+        self.召唤兽法力条 = 法力条(**res[UI]["state"]["兽法"], x=x+42, y=26)
+        self.ui_layer.add_child(self.召唤兽法力条)
 
         #快捷按钮
         buttons, w = get_quic_buttons()

@@ -29,6 +29,14 @@ res = {
 
             "帮派": {"wdf": "gires4.wdf", "was_hash": "经典红木/其他/快速工具栏/帮派.tcp"},
             "系统": {"wdf": "gires4.wdf", "was_hash": "经典红木/其他/快速工具栏/系统.tcp"}
+        },
+        "state": {
+            "人经验": {"wdf": "gires4.wdf", "was_hash": "经典红木/其他/血条栏/人经验.tcp"},
+            "人血": {"wdf": "gires4.wdf", "was_hash": "经典红木/其他/血条栏/人血.tcp"},
+            "人法": {"wdf": "gires4.wdf", "was_hash": "经典红木/其他/血条栏/人法.tcp"},
+            "兽经验": {"wdf": "gires4.wdf", "was_hash": "经典红木/其他/血条栏/兽经验.tcp"},
+            "兽血": {"wdf": "gires4.wdf", "was_hash": "经典红木/其他/血条栏/兽血.tcp"},
+            "兽法": {"wdf": "gires4.wdf", "was_hash": "经典红木/其他/血条栏/兽法.tcp"},
         }
     }
 }

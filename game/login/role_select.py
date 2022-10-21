@@ -42,7 +42,7 @@ class RoleSelect(LoginScene):
         self.role_list = Scroll(line_space=11, x=130, y=199, w=100, h=130)
         i = 0
         for role in role_manager.roles.values():
-            button = TextButton(role["name"], normal="#W", value=role.doc_id)
+            button = TextButton(role["名字"], normal="#W", value=role.doc_id)
             button.click = button.method(click)
             self.role_list.add_child(button)
             i += 1
