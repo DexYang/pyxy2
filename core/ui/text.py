@@ -45,13 +45,15 @@ EMOTE_WDF = "gires.wdf"
 
 
 class Text(Node):
-    def __init__(self, text, x=0, y=0, w=0, h=0, z=0, font_name="font/AdobeSong.ttf", font_size=14, line_space=5):
+    def __init__(self, text, x=0, y=0, w=0, h=0, z=0, font_name="font/AdobeSong.ttf", font_size=14, line_space=5, shadow=False, scolor="black"):
         super().__init__(text, x, y, w, h, z)
 
         self.text = text
 
         self.font_name = font_name
         self.font_size = font_size
+        self.scolor = scolor
+        self.shadow = shadow
 
         self.first_line_emoji = False
         self.line_space = line_space
@@ -150,7 +152,7 @@ class Text(Node):
         return content
 
     def get_text(self, x, y, text=None): 
-        newText = TextWrapper(x = x, y = y, font_name=self.font_name, fontsize=self.font_size)
+        newText = TextWrapper(x = x, y = y, font_name=self.font_name, fontsize=self.font_size, shadow=self.shadow, scolor=self.scolor)
         if text:
             newText.color = text.color
             newText.bold = text.bold
@@ -322,6 +324,8 @@ class TextWrapper(Node):
                         underline=False,
                         font_name="",
                         fontsize=14,
+                        shadow=(1.0, 1.0),
+                        scolor="black",
                         x=0, y=0, w=0, h=0, z=0):
         super().__init__(x=x, y=y, w=w, h=h, z=z)
         
@@ -333,6 +337,8 @@ class TextWrapper(Node):
         self.italic = italic
         self.blink = blink
         self.underline = underline
+        self.scolor = scolor
+        self.shadow = (1.0, 1.0) if shadow else None
         self.fontsize = fontsize
         self.font_name = XY2PATH + font_name if font_name != "" else ""
 
@@ -400,11 +406,11 @@ class TextWrapper(Node):
             ptext.draw(self.text, pos=(self.screen_rect.x + dx, self.screen_rect.y + dy), 
                 color=self.color, bold=self.bold, italic=self.italic, surf=screen,
                 width=self.w,
-                underline=self.underline, fontsize=self.fontsize, sysfontname="simsun", alpha=self.alpha,
+                underline=self.underline, fontsize=self.fontsize, sysfontname="simsun", alpha=self.alpha, shadow=self.shadow, scolor=self.scolor,
                 colortag=self.ColorTag, underlinetag=self.UnderlineTag, boldtag=self.BoldTag, italictag=self.ItalicTag)
         else:
             ptext.draw(self.text, pos=(self.screen_rect.x + dx, self.screen_rect.y + dy), 
                 color=self.color, bold=self.bold, italic=self.italic, surf=screen,
                 width=self.w,
-                underline=self.underline, fontsize=self.fontsize, fontname=self.font_name, alpha=self.alpha,
+                underline=self.underline, fontsize=self.fontsize, fontname=self.font_name, alpha=self.alpha, shadow=self.shadow, scolor=self.scolor,
                 colortag=self.ColorTag, underlinetag=self.UnderlineTag, boldtag=self.BoldTag, italictag=self.ItalicTag)

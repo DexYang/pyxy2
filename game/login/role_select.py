@@ -74,11 +74,11 @@ class RoleSelect(LoginScene):
         if self.头像:
             self.头像.destroy()
         self.头像 = StaticNode("photo", "facelarge/{:d}.tga".format(photo_id), x=206, y=79)
-        self.等级.set_text(role_manager.roles[value]["等级"])
+        self.等级.set_text("#d"+str(role_manager.roles[value]["等级"]))
         self.等级.hidden = False
-        self.性别.set_text(性别[role_manager.roles[value]["性别"]])
+        self.性别.set_text("#d"+性别[role_manager.roles[value]["性别"]])
         self.性别.hidden = False
-        self.种族.set_text(种族[role_manager.roles[value]["种族"]])
+        self.种族.set_text("#d"+种族[role_manager.roles[value]["种族"]])
         self.种族.hidden = False
 
     def update(self, context):
