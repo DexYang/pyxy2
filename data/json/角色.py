@@ -1,8 +1,9 @@
 from data.character import characters, 种族, 性别
+from data.json.召唤兽 import get召唤兽
 
 
-def get(char_id, role_name):
-    return {
+def get角色(char_id, role_name):
+    res = {
         "shape": char_id,
         "photo": char_id,
 
@@ -50,3 +51,6 @@ def get(char_id, role_name):
         "召唤兽": [
         ]
     }
+
+    res["召唤兽"].append(get召唤兽(2060))
+    return res

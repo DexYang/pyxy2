@@ -55,11 +55,9 @@ class AnimatedSprite(Sprite):
 
     def update(self, context):
         self.state.update(context)
-        left, top = context.get_left_top()
-        self.screen_rect = self.rect.move(-left, -top)
-        self.z = self.rect.y
+        super().update(context)
 
-    def draw(self, screen):
+    def _draw(self, screen):
         self.state.draw(screen, self.screen_rect.x, self.screen_rect.y, self.hover)
 
     def get_ani_screen_rect(self):

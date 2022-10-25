@@ -7,7 +7,7 @@ from core.ui.static_node import StaticNode, ExtWidthStatic
 from core.ui.input import Input
 
 from .quic_buttons import get_quic_buttons
-from .state import 气血条, 法力条, 经验条
+from .status import 气血条, 法力条, 经验条, 召唤兽气血条, 召唤兽法力条, 召唤兽经验条
 
 from data.world.ui import res 
 from settings import UI, WindowSize
@@ -53,11 +53,11 @@ class WorldScene(Scene):
         static.x = x - static.w
         x -= static.w
         self.ui_layer.add_child(static)
-        self.召唤兽经验条 = 经验条(**res[UI]["state"]["兽经验"], x=x+42, y=4)
+        self.召唤兽经验条 = 召唤兽经验条(**res[UI]["state"]["兽经验"], x=x+42, y=4)
         self.ui_layer.add_child(self.召唤兽经验条)
-        self.召唤兽气血条 = 气血条(**res[UI]["state"]["兽血"], x=x+42, y=15)
+        self.召唤兽气血条 = 召唤兽气血条(**res[UI]["state"]["兽血"], x=x+42, y=15)
         self.ui_layer.add_child(self.召唤兽气血条)
-        self.召唤兽法力条 = 法力条(**res[UI]["state"]["兽法"], x=x+42, y=26)
+        self.召唤兽法力条 = 召唤兽法力条(**res[UI]["state"]["兽法"], x=x+42, y=26)
         self.ui_layer.add_child(self.召唤兽法力条)
 
         #快捷按钮
@@ -66,11 +66,11 @@ class WorldScene(Scene):
             self.ui_layer.add_child(button)
 
         # 聊天
-        charframe = ExtWidthStatic(name=k, **res[UI]["聊天"]["聊天框"], w=w)
+        charframe = ExtWidthStatic(name="聊天框", **res[UI]["聊天"]["聊天框"], w=w)
         charframe.y = WindowSize[1] - charframe.h
         self.ui_layer.add_child(charframe)
 
-        self.input = Input(x=3, y=charframe.y+1, w=w, font_size=16, h=charframe.h)
+        self.input = Input(x=3, y=charframe.y+2, w=w, font_size=16, h=charframe.h - 2)
         self.ui_layer.add_child(self.input)
         
        

@@ -2,6 +2,7 @@ from core.animated.animated_sprite import AnimatedSprite
 from data.character import characters
 from core.animated.character_state import CharacterStandNormalState, CharacterStandTeaseState, CharacterWalkingState, \
     CharacterRunningState
+from core.ui.text import Text
 
 
 class Character(AnimatedSprite):
@@ -30,6 +31,11 @@ class Character(AnimatedSprite):
         self.is_running = False
 
         self.mask = None
+
+        self.名字 = Text("#G"+self.data["名字"], w=100, h=16, font_size=16)
+        self.名字.x = - self.名字.max_width / 2
+        self.名字.y = 20
+        self.add_child(self.名字)
     
     @property
     def x(self):  # x y为世界坐标，因为ani在draw时，已经减去锚点，实际上xy是人物锚点（人物脚底）
@@ -55,12 +61,6 @@ class Character(AnimatedSprite):
         elif state_type == "武器":
             weapen_id = self.character["武器"][self.武器]
             return self.WDF, self.WAS.format(str(weapen_id), str(state_name))
-
-    def update(self, context):
-        self.state.update(context)
-        left, top = context.get_left_top()
-        self.screen_rect = self.rect.move(-left, -top)
-        self.z = self.y
 
     def reset_target(self):
         self.target = self.x, self.y

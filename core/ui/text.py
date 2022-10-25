@@ -45,12 +45,12 @@ EMOTE_WDF = "gires.wdf"
 
 
 class Text(Node):
-    def __init__(self, text, x=0, y=0, w=0, h=0, z=0, fontname="", font_size=14, line_space=5):
+    def __init__(self, text, x=0, y=0, w=0, h=0, z=0, font_name="font/AdobeSong.ttf", font_size=14, line_space=5):
         super().__init__(text, x, y, w, h, z)
 
         self.text = text
 
-        self.fontname = fontname
+        self.font_name = font_name
         self.font_size = font_size
 
         self.first_line_emoji = False
@@ -150,7 +150,7 @@ class Text(Node):
         return content
 
     def get_text(self, x, y, text=None): 
-        newText = TextWrapper(x = x, y = y, fontname=self.fontname, fontsize=self.font_size)
+        newText = TextWrapper(x = x, y = y, font_name=self.font_name, fontsize=self.font_size)
         if text:
             newText.color = text.color
             newText.bold = text.bold
@@ -320,7 +320,7 @@ class TextWrapper(Node):
                         italic=False,
                         blink=False,
                         underline=False,
-                        fontname="",
+                        font_name="",
                         fontsize=14,
                         x=0, y=0, w=0, h=0, z=0):
         super().__init__(x=x, y=y, w=w, h=h, z=z)
@@ -334,7 +334,7 @@ class TextWrapper(Node):
         self.blink = blink
         self.underline = underline
         self.fontsize = fontsize
-        self.fontname = XY2PATH + fontname if fontname != "" else ""
+        self.font_name = XY2PATH + font_name if font_name != "" else ""
 
         self.line = 0
 
@@ -396,7 +396,7 @@ class TextWrapper(Node):
     def draw(self, screen=None, dx=0, dy=0):
         if self.hidden:
             return
-        if self.fontname == "":
+        if self.font_name == "":
             ptext.draw(self.text, pos=(self.screen_rect.x + dx, self.screen_rect.y + dy), 
                 color=self.color, bold=self.bold, italic=self.italic, surf=screen,
                 width=self.w,
@@ -406,5 +406,5 @@ class TextWrapper(Node):
             ptext.draw(self.text, pos=(self.screen_rect.x + dx, self.screen_rect.y + dy), 
                 color=self.color, bold=self.bold, italic=self.italic, surf=screen,
                 width=self.w,
-                underline=self.underline, fontsize=self.fontsize, fontname=self.fontname, alpha=self.alpha,
+                underline=self.underline, fontsize=self.fontsize, fontname=self.font_name, alpha=self.alpha,
                 colortag=self.ColorTag, underlinetag=self.UnderlineTag, boldtag=self.BoldTag, italictag=self.ItalicTag)

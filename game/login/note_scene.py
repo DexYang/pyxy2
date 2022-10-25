@@ -39,5 +39,5 @@ class NoteScene(LoginScene):
         self.backbtn.click = lambda : self.emit("change_scene", scene_name="LoginScene") 
         self.ui_layer.add_child(self.backbtn)
 
-        self.note = Text(text=text, x=33, y=65, w=485, h=350, z=100)
+        self.note = Text(text=text, font_size=16, x=33, y=65, w=485, h=350, z=100)
         self.ui_layer.add_child(self.note)

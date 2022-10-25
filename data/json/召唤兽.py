@@ -1,4 +1,4 @@
-def get(char_id):
+def get召唤兽(char_id):
     return {
         "shape": char_id,
         "photo": char_id,

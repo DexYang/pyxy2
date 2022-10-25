@@ -66,6 +66,7 @@ class RoleManager(Ref):
     def set_main_role(self, character, role_id):
         self.main_role = character
         self.main_role_id = role_id
+        self.emit("change_status")
 
     def load_into(self, scene):
         if hasattr(scene, "world_layer"):

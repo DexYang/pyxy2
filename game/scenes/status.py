@@ -48,6 +48,9 @@ class ShrinkNode(StaticNode):
         self.ani_surface = self.surface.subsurface(self.shrink_rect)
         self.change()
 
+    def on_change_status(self, event):
+        self.change()
+
 
 class 气血条(ShrinkNode):
     index = "气血"
@@ -61,15 +64,33 @@ class 经验条(ShrinkNode):
     def denominator(self):
         return 人物经验库[role_manager.main_role.data["转生"]][role_manager.main_role.data["等级"]]
 
-class 召唤兽气血条(ShrinkNode):
+
+class 召唤兽(ShrinkNode):
+    def numerator(self):
+        data = role_manager.main_role.data
+        return data["召唤兽"][data["已选召唤兽"]][self.index]
+
+    def denominator(self):
+        data = role_manager.main_role.data
+        return data["召唤兽"][data["已选召唤兽"]]["最大"+self.index]
+
+    def change(self):
+        data = role_manager.main_role.data
+        if data["已选召唤兽"] == -1 or len(data["召唤兽"]) == 0:
+            self.hidden = True
+            return
+        self.shrink_rect.w = min(self.numerator() / self.denominator(), 1) * self.surface_rect.w
+
+
+class 召唤兽气血条(召唤兽):
     index = "气血"
 
-class 法力条(ShrinkNode):
+class 召唤兽法力条(召唤兽):
     index = "法力"
 
-
-class 经验条(ShrinkNode):
+class 召唤兽经验条(召唤兽):
     index = "经验"
 
     def denominator(self):
-        return 1000
+        data = role_manager.main_role.data
+        return 召唤兽经验库[data["召唤兽"][data["已选召唤兽"]]["等级"]]

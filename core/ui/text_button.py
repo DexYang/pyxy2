@@ -3,16 +3,16 @@ from core.ui.text import Text
 
 
 class TextButton(Button):
-    def __init__(self, text, fontname="", normal="#G", hover="#Y", font_size=14, value=None, x=0, y=0, z=100):
+    def __init__(self, text, font_name="", normal="#G", hover="#Y", font_size=14, value=None, x=0, y=0, z=100):
         self.value = value
 
         self.hover = False
         self.pressed = False
 
-        self.text = Text(normal+text, w=800, h=font_size, font_size=font_size, fontname=fontname)
+        self.text = Text(normal+text, w=800, h=font_size, font_size=font_size, font_name=font_name)
         super(Button, self).__init__(text, x, y, w=self.text.max_width, h=font_size, z=z)
         
-        self.pressed_text = Text(hover+text, w=800, h=font_size, font_size=font_size, fontname=fontname)
+        self.pressed_text = Text(hover+text, w=800, h=font_size, font_size=font_size, font_name=font_name)
         self.add_child(self.text)
         self.add_child(self.pressed_text)
         

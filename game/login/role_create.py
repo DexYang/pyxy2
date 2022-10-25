@@ -11,7 +11,7 @@ from core.ui.input import Input
 from core.role_manager import role_manager
 
 from db.role import exist_role_name
-from data.json.角色 import get
+from data.json.角色 import get角色
 
 
 class RoleCreate(LoginScene):
@@ -128,7 +128,7 @@ class RoleCreate(LoginScene):
         if exist_role_name(role_name):
             self.emit("tip", text="角色名称已存在")
             return
-        role = get(self.selected, role_name)
+        role = get角色(self.selected, role_name)
         
         role_manager.create_role(role)
         self.emit("change_scene", scene_name="RoleSelect")

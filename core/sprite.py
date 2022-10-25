@@ -1,6 +1,8 @@
 import pygame as pg
+import weakref
 from pygame.locals import Rect
 from core.ref import Ref
+from core.ui.text import Text
 
 
 class Sprite(Ref):
@@ -13,13 +15,25 @@ class Sprite(Ref):
         self.y = y
         self.z = 0
 
-        self.pre = None
-        self.next = None
         self.useless = False
 
         self.hover = False
 
         self.surface = None
+
+        self._parent = None
+        self.children = {}
+        self.children_upper = {}
+        self.children_lower = {}
+        self.children_text = {}
+
+    @property
+    def parent(self):
+        return None if self._parent is None else self._parent()
+
+    @parent.setter
+    def parent(self, node):
+        self._parent = weakref.ref(node)
 
     @property
     def x(self):  # x y为世界坐标，因为ani在draw时，已经减去锚点，实际上xy是人物锚点（人物脚底）
@@ -40,7 +54,45 @@ class Sprite(Ref):
     def update(self, context):
         left, top = context.get_left_top()
         self.screen_rect = self.rect.move(-left, -top)
-        self.z = self.rect.y
+        self.z = self.y
+        self.update_children(context)
+
+    def update_children(self, context):
+        if not self.children:
+            return
+        for child in list(self.children.values()):
+            child.update(context)
+            if child.useless:
+                child.parent = None
+                self.children.pop(child.name)
+                self.children_upper.pop(child.name)
+                self.children_lower.pop(child.name)
+                child.destroy()
+
+    def _draw(self, screen):
+        screen.blit(self.surface, self.screen_rect)
 
     def draw(self, screen):
-        screen.blit(self.surface, self.screen_rect)
+        if not self.children:
+            self._draw(screen)
+        else:
+            for child in list(self.children_lower.values()):
+                child.draw(screen)
+            self._draw(screen)
+            for child in list(self.children_upper.values()):
+                child.draw(screen)
+
+    def draw_text(self, screen):
+        for child in list(self.children_text.values()):
+            child.draw(screen)
+            
+    def add_child(self, node):
+        if node.name not in self.children:
+            node.parent = self
+            self.children[node.name] = node
+            if isinstance(node, Text):
+                self.children_text[node.name] = node
+            elif node.z < 0:
+                self.children_lower[node.name] = node
+            else:
+                self.children_upper[node.name] = node
