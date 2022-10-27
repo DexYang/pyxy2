@@ -32,7 +32,7 @@ class Character(AnimatedSprite):
 
         self.mask = None
 
-        self.名字 = Text("#G#d"+self.data["名字"], w=100, h=16, font_size=16, shadow=True)
+        self.名字 = Text("#G#d"+self.data["名字"], w=100, h=16, font_size=16, shadow=True, font_name='font/AdobeSong.ttf')
         self.名字.x = - self.名字.max_width / 2
         self.名字.y = 20
         self.add_child(self.名字)

@@ -22,6 +22,8 @@ class Dialog(StaticNode):
 
     def on_mouse_left_down(self, event): 
         if not event.processed and self.screen_rect.collidepoint(*event.pos):
+            if self.parent.max_z != self.z:
+                self.z = self.parent.max_z + 1
             self.pressed = True
             event.processed = True
 
@@ -38,7 +40,6 @@ class Dialog(StaticNode):
         if self.screen_rect.collidepoint(*event.pos):
             self.hidden = True
             event.handled = True
-            
 
 class Confirm(Dialog):
     def __init__(self, name, x=0, y=0, z=0):

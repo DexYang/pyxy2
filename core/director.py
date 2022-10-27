@@ -116,7 +116,7 @@ class Director(Ref):
 
     def run(self, scene_class_name=None):
         if scene_class_name:
-            self.change_scene(scene_class_name)
+            self.change_scene(scene_class_name, "fadeOut")
 
         context = Context()
         while self.running:

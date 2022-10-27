@@ -32,6 +32,11 @@ class Node(Ref):
 
         self.focus = False
 
+        self.max_z = 0
+
+        self.changed = True
+        self.need_to_handled_children = []
+
     @property
     def x(self):
         return self.rect.x
@@ -54,7 +59,7 @@ class Node(Ref):
 
     @z.setter
     def z(self, z):
-        if self.parent:
+        if self.parent and self._z != z:
             self.parent.child_z_update(self, self._z, z)
         self._z = z
 
@@ -68,15 +73,22 @@ class Node(Ref):
     def handle_events(self, event):
         if self.hidden:
             return
-        z_order = list(self.children_z.keys())
-        z_order.sort(reverse=True)
-        for z in z_order:
-            if z < 0:
-                break
-            for child in self.children_z[z].values():
-                child.handle_events(event)
-                if event.handled == True:
-                    return
+        if self.changed:
+            z_order = [z for z in self.children_z.keys() if z >= 0]
+            z_order.sort(reverse=True)
+            if z_order: self.max_z = z_order[0]
+
+            self.need_to_handled_children = []
+            for z in z_order:
+                for child in self.children_z[z].values():
+                    self.need_to_handled_children.append(child)
+
+            self.changed = False
+
+        for child in self.need_to_handled_children:
+            child.handle_events(event)
+            if event.handled == True:
+                return
         return self.handle_event(event)
             
     def update_children(self, context):
@@ -119,6 +131,7 @@ class Node(Ref):
                 if node.z not in self.children_z:
                     self.children_z[node.z] = {}
                 self.children_z[node.z][node.name] = node
+                self.changed = True
 
     def has_child(self, name): 
         return name in self.children
@@ -138,6 +151,7 @@ class Node(Ref):
         if new_z not in self.children_z:
             self.children_z[new_z] = {}
         self.children_z[new_z][node.name] = node
+        self.changed = True
 
     def __del__(self):
         self.clear_children()

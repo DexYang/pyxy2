@@ -12,6 +12,8 @@ from core.ui.dialog import ModalDialog
 from core.ui.text import TextWrapper
 from db.user import add_user
 
+from core.ui.combination_dialog import CombinationDialog
+
 
 class StartScene(LoginScene):
     def __init__(self, *args, **kwargs):
@@ -45,6 +47,12 @@ class StartScene(LoginScene):
         self.ui_layer.add_child(self.退出游戏)
 
         self.play(**res[UI]["sound"]["water_sound"])  # 水流声
+
+        self.t = CombinationDialog("CombinationDialog", x=50, y=50, w=320, h=240, z=999)
+        self.ui_layer.add_child(self.t)
+
+        self.tt = CombinationDialog("CombinationDialo11g", x=50, y=50, w=400, h=300, z=1500)
+        self.ui_layer.add_child(self.tt)
     
     def exit(self):
         self.sound.stop_loop_sound(wdf=res[UI]["sound"]["water_sound"]["wdf"], was_hash=res[UI]["sound"]["water_sound"]["was_hash"])

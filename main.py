@@ -13,7 +13,7 @@ from game.scenes.world_scene import WorldScene
 
 
 if __name__ == '__main__':
-    # res_manager.get("gires4.wdf", "经典红木/其他/血条栏/头像框.tcp")
+    res_manager.get("gires4.wdf", "经典红木/元件按钮/水平进度条-底-1.tcp")
 
     director = Director(title="大话西游II")
 

@@ -45,7 +45,7 @@ EMOTE_WDF = "gires.wdf"
 
 
 class Text(Node):
-    def __init__(self, text, x=0, y=0, w=0, h=0, z=0, font_name="font/AdobeSong.ttf", font_size=14, line_space=5, shadow=False, scolor="black"):
+    def __init__(self, text, x=0, y=0, w=0, h=0, z=0, font_name="", font_size=14, line_space=5, shadow=False, scolor="black"):
         super().__init__(text, x, y, w, h, z)
 
         self.text = text
@@ -245,13 +245,14 @@ class Text(Node):
             line_height = line_height_correcter[_i]
             line_height_correcter[_i] = (y, line_height)
             y += line_height + self.line_space
+        self.h = y
         for child in self.children.values():
             y, line_height = line_height_correcter[child.line]
             if isinstance(child, TextWrapper):
                 child.y = y + line_height - self.font_size
             elif isinstance(child, EmojiWrapper): 
                 child.y = y + line_height + 2
-        self.h = y
+        
             
 
     @staticmethod
