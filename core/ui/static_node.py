@@ -2,6 +2,7 @@ from core.ui.node import Node
 from core.animation import Animation
 from core.res_manager import res_manager, WAS
 import pygame
+from utils.scale9 import scale_horizontal
 
 
 class StaticNode(Node):
@@ -46,5 +47,5 @@ class ExtWidthStatic(StaticNode):
         
         if w >= self.w:
             self.w = w
-            self.surface = pygame.transform.smoothscale(self.surface, (w, self.h))
+            self.surface = scale_horizontal(self.surface, w)
             
