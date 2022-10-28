@@ -5,7 +5,7 @@ from core.animation import Animation
 from core.res_manager import res_manager, WAS
 
 
-def get_surface(wdf: str, was_hash: str | int) -> pg.Surface: 
+def get_surface(wdf: str, was_hash: str | int, **kwargs) -> pg.Surface: 
     item = res_manager.get(wdf, was_hash)
     if isinstance(item, WAS):
         item = Animation(item)
@@ -166,9 +166,10 @@ def scale9_combination(w: int, h: int, **kwargs):
         _y += oh
 
     _x = 0
+    dy = 0 if "dy" not in kwargs.get("下") else kwargs.get("下")["dy"]
     while _x < w:
         _surf.blit(上, (_x, 0))
-        _surf.blit(下, (_x, h - 下.get_rect().height))
+        _surf.blit(下, (_x, h - 下.get_rect().height + dy))
         _x += ow
 
     _y = 0

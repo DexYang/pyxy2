@@ -4,7 +4,7 @@ from data.dialog import res as dialog_res
 
 
 class Dialog(StaticNode):
-    def __init__(self, wdf, was_hash, name, x=0, y=0, z=0):
+    def __init__(self, wdf, was_hash, name=None, x=0, y=0, z=0):
         super().__init__(wdf, was_hash, name, x, y, z)
         self.pressed = False
 

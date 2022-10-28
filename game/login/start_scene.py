@@ -1,4 +1,3 @@
-from audioop import add
 from core.scene import LoginScene
 from core.ui.label_button import LongLabelButton
 from data.login.start_scene import res

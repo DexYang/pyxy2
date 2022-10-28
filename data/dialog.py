@@ -4,7 +4,7 @@ res = {
 
         "combination": {
             "上": {"wdf": "gires3.wdf", "was_hash": "拼合元素老界面/上.tcp"},
-            "下": {"wdf": "gires3.wdf", "was_hash": "拼合元素老界面/下.tcp"},
+            "下": {"wdf": "gires3.wdf", "was_hash": "拼合元素老界面/下.tcp", "dy": -1},
             "左上": {"wdf": "gires3.wdf", "was_hash": "拼合元素老界面/左上.tcp"},
             "左下": {"wdf": "gires3.wdf", "was_hash": "拼合元素老界面/左下.tcp"},
             "右上": {"wdf": "gires3.wdf", "was_hash": "拼合元素老界面/右上.tcp"},
