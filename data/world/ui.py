@@ -37,6 +37,7 @@ res = {
             "兽经验": {"wdf": "gires4.wdf", "was_hash": "经典红木/其他/血条栏/兽经验.tcp"},
             "兽血": {"wdf": "gires4.wdf", "was_hash": "经典红木/其他/血条栏/兽血.tcp"},
             "兽法": {"wdf": "gires4.wdf", "was_hash": "经典红木/其他/血条栏/兽法.tcp"},
-        }
+        },
+        "头像底框": {"wdf": "gires4.wdf", "was_hash": "经典红木/元件按钮/头像底框.tcp"},
     }
 }

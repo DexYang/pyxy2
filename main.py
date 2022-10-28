@@ -1,6 +1,5 @@
 from core.director import Director
 from lib.pyxy2 import MapThread
-from core.animated.character import Character
 from core.res_manager import res_manager
 
 from game.login.start_scene import StartScene
@@ -9,7 +8,6 @@ from game.login.login_scene import GameLoginScene
 from game.login.role_select import RoleSelect
 from game.login.role_create import RoleCreate
 from game.scenes.world_scene import WorldScene
-
 
 
 if __name__ == '__main__':

@@ -8,6 +8,7 @@ class TextButton(Button):
 
         self.hover = False
         self.pressed = False
+        self.selected = False
 
         self.text = Text(normal+text, w=800, h=font_size, font_size=font_size, font_name=font_name)
         super(Button, self).__init__(text, x, y, w=self.text.max_width, h=font_size, z=z)
@@ -22,10 +23,14 @@ class TextButton(Button):
         self.screen_rect = self.rect.move(*self.get_parent_screen_xy())
         if self.pressed:
             self.screen_rect.move_ip(1, 1)
+        if self.selected:
+            self.screen_rect.move_ip(5, 0)
         self.update_children(context)
             
     def draw(self, screen):
         if self.pressed or self.hover:
             self.pressed_text.draw(screen)
+        elif self.selected:
+            self.text.draw(screen)
         else:
             self.text.draw(screen)

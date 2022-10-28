@@ -10,7 +10,7 @@ class Scroll(Node):
         self.hover = False
 
         self.top = 0
-        self.buttom = 0
+        self.bottom = 0
 
     def add_child(self, node):
         if isinstance(node, Node):
@@ -23,13 +23,13 @@ class Scroll(Node):
     def handle_events(self, event):
         if self.hidden:
             return
-        for i in range(self.top, self.buttom):
+        for i in range(self.top, self.bottom):
             self.children[i].handle_events(event)
-            if event.handled == True:
+            if event.handled:
                 return
         return self.handle_event(event)
 
-    def update(self, context): 
+    def update(self, context):
         if self.hidden:
             return
         self.screen_rect = self.rect.move(*self.get_parent_screen_xy())
@@ -46,22 +46,22 @@ class Scroll(Node):
             else:
                 break
             i += 1
-        self.buttom = i
+        self.bottom = i
 
     def draw(self, screen):
         if self.hidden:
             return
-        for i in range(self.top, self.buttom):
+        for i in range(self.top, self.bottom):
             self.children[i].draw(screen)
 
     def on_mouse_wheel_up(self, event):
         if self.is_in(event.pos):
             self.top = max(self.top - 1, 0)
-            self.emit("change_mouse_state", state_name = "normal")
+            self.emit("change_mouse_state", state_name="normal")
             event.handled = True
 
     def on_mouse_wheel_down(self, event):
         if self.is_in(event.pos):
             self.top = min(self.top + 1, self.index - 1)
-            self.emit("change_mouse_state", state_name = "normal")
+            self.emit("change_mouse_state", state_name="normal")
             event.handled = True

@@ -1,3 +1,4 @@
+import pygame as pg
 from core.ui.button import Button
 from core.ui.node import Node
 from core.res_manager import res_manager, WAS
@@ -6,7 +7,7 @@ import pygame
 
 
 class OnePicButton(Button):
-    def __init__(self, wdf, was_hash, name=None, selected=False, value=None, x=0, y=0, z=100):
+    def __init__(self, wdf, was_hash, name=None, selected=False, value=None, x=0, y=0, z=100, w=0, h=0):
         
         self.wdf = wdf
         self.was_hash = was_hash
@@ -22,7 +23,10 @@ class OnePicButton(Button):
             self.surface = self.item.get_current_frame().surface
         else:
             self.surface = self.item
-            
+
+        if w and h:
+            self.surface = pg.transform.smoothscale(self.surface, (w, h))
+
         super(Button, self).__init__(name, x, y, self.surface.get_width(), self.surface.get_height(), z)
 
     def draw(self, screen):

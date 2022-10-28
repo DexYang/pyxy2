@@ -18,4 +18,4 @@ def create_roles(username, role):
 
 
 def update_role(username, role):
-    role_table.update(role, ((Roles.username == username) | (Roles.name == role["名字"])))
+    role_table.update(role, ((Roles.username == username) & (Roles.名字 == role["名字"])))

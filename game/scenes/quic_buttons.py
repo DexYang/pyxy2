@@ -1,7 +1,7 @@
 from core.ui.button import Button
 from core.ui.react_button import ReactButton
 
-from data.world.ui import res 
+from data.world.ui import res
 from settings import UI, WindowSize
 
 
@@ -22,6 +22,7 @@ class 道具(Button):
         if not hasattr(self.parent, "道具窗口"):
             print("道具窗口不存在")
 
+
 class 组队(ReactButton):
     def click(self, *args, **kwargs):
         if not hasattr(self.parent, "组队窗口"):
@@ -32,6 +33,7 @@ class 攻击(Button):
     def click(self, *args, **kwargs):
         if not hasattr(self.parent, "攻击窗口"):
             print("攻击窗口不存在")
+
 
 class 给予(Button):
     def click(self, *args, **kwargs):
@@ -119,4 +121,3 @@ def get_quic_buttons():
         x -= static.w
         buttons.append(static)
     return buttons, x
-

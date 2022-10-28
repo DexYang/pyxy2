@@ -1,3 +1,4 @@
+import pygame as pg
 from core.ui.node import Node
 from core.animation import Animation
 from core.res_manager import res_manager, WAS
@@ -6,7 +7,7 @@ from utils.scale9 import scale_horizontal
 
 
 class StaticNode(Node):
-    def __init__(self, wdf, was_hash, name=None, x=0, y=0, z=0):
+    def __init__(self, wdf, was_hash, name=None, x=0, y=0, z=0, w=0, h=0):
 
         self.wdf = wdf
         self.was_hash = was_hash
@@ -18,6 +19,9 @@ class StaticNode(Node):
             self.surface = self.item.get_current_frame().surface
         else:
             self.surface = self.item
+
+        if w and h:
+            self.surface = pg.transform.smoothscale(self.surface, (w, h))
 
         super().__init__(name, x, y, self.surface.get_width(), self.surface.get_height(), z)
 
