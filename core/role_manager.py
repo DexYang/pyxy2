@@ -20,18 +20,28 @@ class RoleManager(Ref):
 
         self.main_role_id = 0
 
+        self.main_role_scene_changed = False
+        self.next_main_role_id = 0
+
     @property
     def main_role(self):
         return self.characters[self.main_role_id]
 
     @main_role.setter
     def main_role(self, main_role_id):
-        self.main_role_id = main_role_id
-        self.emit("change_status")
+        if self.main_role_id and str(self.roles[self.main_role_id]["map_id"]) != str(self.roles[main_role_id]["map_id"]):
+            self.gen_character(main_role_id)
+            self.main_role_scene_changed = True
+            self.next_main_role_id = main_role_id
+            self.emit("change_scene", scene_name="World", map_id=self.roles[main_role_id]["map_id"])
+            self.emit("change_status")
+        else:
+            self.main_role_id = main_role_id
+            self.emit("change_status")
 
     def login(self, username):
         self.username = username
-        self.roles = {}
+        self.roles = {} 
         login(self.username)
 
     def logout(self):
@@ -61,17 +71,11 @@ class RoleManager(Ref):
         create_roles(self.username, role)
 
     def enter_world(self, main_role_id):
-        map_id = self.roles[main_role_id]["map_id"]
-        for role_id, v in self.roles.items():
-            if v["map_id"] == map_id:
-                self.characters[role_id] = Character(char_id=self.roles[role_id]["shape"],
-                                                     data=self.roles[role_id],
-                                                     x=self.roles[role_id]["x"],
-                                                     y=self.roles[role_id]["y"])
         self.main_role = main_role_id
-        self.emit("change_scene", scene_name="World", map_id=map_id)
+        self.gen_character(main_role_id)
+        self.emit("change_scene", scene_name="World", map_id=self.roles[main_role_id]["map_id"])
 
-    def change_world(self, map_id, x, y):
+    def portal_world(self, map_id, x, y):
         self.main_role.data["map_id"] = map_id
         self.main_role.x = x
         self.main_role.y = y
@@ -80,15 +84,21 @@ class RoleManager(Ref):
 
     def load_into(self, scene):
         if hasattr(scene, "world_layer"):
+            if self.main_role_scene_changed:
+                self.main_role_scene_changed = False
+                self.main_role_id = self.next_main_role_id
             map_id = str(self.roles[self.main_role_id]["map_id"])
             for role_id, v in self.roles.items():
                 if str(v["map_id"]) == map_id:
-                    if not self.characters[role_id]:
-                        self.characters[role_id] = Character(char_id=self.roles[role_id]["shape"],
-                                                             data=self.roles[role_id],
-                                                             x=self.roles[role_id]["x"],
-                                                             y=self.roles[role_id]["y"])
+                    self.gen_character(role_id)
                     scene.world_layer.add_child(self.characters[role_id])
+
+    def gen_character(self, role_id):
+        if role_id not in self.characters:
+            self.characters[role_id] = Character(char_id=self.roles[role_id]["shape"],
+                                            data=self.roles[role_id],
+                                            x=self.roles[role_id]["x"],
+                                            y=self.roles[role_id]["y"])
 
     def on_every_30s(self, event):
         self.update_roles()

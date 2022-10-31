@@ -23,5 +23,5 @@ class Portal(AnimatedSprite):
         if self.count > 5:
             self.count = -1
             if self.collide_rect.collidepoint(role_manager.main_role.x, role_manager.main_role.y):
-                role_manager.change_world(self.map_id, self.tx, self.ty)
+                role_manager.portal_world(self.map_id, self.tx, self.ty)
         self.count += 1

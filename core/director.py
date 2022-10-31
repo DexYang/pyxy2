@@ -109,7 +109,7 @@ class Director(Ref):
         self._scene.update(context)
 
     def draw(self):
-        self._screen.fill((70, 70, 70))
+        # self._screen.fill((70, 70, 70))
         self._scene.draw(self._screen)
         self.tip_layer.draw(self._screen)
         self.mouse.draw(self._screen)
