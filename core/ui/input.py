@@ -7,12 +7,6 @@ from core.ui.node import Node
 from lib import ptext
 
 os.environ["SDL_IME_SHOW_UI"] = "1"
-REPEAT = {
-    K_BACKSPACE,
-    K_DELETE,
-    K_LEFT,
-    K_RIGHT
-}
 
 
 class Input(Node):
@@ -23,9 +17,9 @@ class Input(Node):
         self.text_color = text_color
         self.font_size = font_size
 
-        self.text = ""
+        self._text = ""
         self.cursor = 0
-        self.cursor_pixel_len = 0
+        self.cursor_pixel_x = 0
 
         self.cursor_surface = pg.surface.Surface((1, self.h))
         self.cursor_surface.fill(self.text_color)
@@ -33,9 +27,6 @@ class Input(Node):
         self.surface = pg.surface.Surface((w, h), flags=pg.SRCALPHA)
 
         self.slide_window_left = 0
-
-        self.key_repeat_counter = {}
-        self.frame_count = 0
 
         self.last_time = 0
         self.blinkRate = 500
@@ -45,6 +36,21 @@ class Input(Node):
         self.no_chinese = no_chinese
 
         self.padding_top = max(0, (h - font_size) // 2)
+
+        self.text_position = [0]
+
+    @property
+    def text(self):
+        return self._text
+
+    @text.setter
+    def text(self, text):
+        self._text = text
+        pos = 0
+        self.text_position = [0]
+        for char in self._text:
+            pos += self.font_size if self.is_chinese(char) else self.font_size // 2
+            self.text_position.append(pos)
 
     def update(self, context):
         if self.hidden:
@@ -56,28 +62,9 @@ class Input(Node):
             if current > self.last_time + self.blinkRate:
                 self.show_blink = not self.show_blink
                 self.last_time = current
+            self.cursor_pixel_x = self.text_position[self.cursor]
+            self.slide_window_left = max(0, self.cursor_pixel_x - self.w)
 
-            if self.cursor != 0:
-                tsurf, _ = ptext.draw(text=self.text[:self.cursor], pos=(0, 0), surf=self.surface, sysfontname="simsun", fontsize=self.font_size)
-                self.cursor_pixel_len = tsurf.get_rect().w
-            else:
-                self.cursor_pixel_len = 0
-            self.slide_window_left = max(0, self.cursor_pixel_len - self.w)
-
-            self.frame_count += 1
-            if self.frame_count > 5:
-                self.frame_count = 0
-                for key in self.key_repeat_counter.keys():
-                    if key == pg.K_BACKSPACE:
-                        if len(self.text) > 0 and self.cursor > 0:
-                            self.text = self.text[:self.cursor-1] + self.text[self.cursor:]
-                            self.cursor = max(0, self.cursor - 1)                       
-                    elif key  == pg.K_DELETE:
-                        self.text = self.text[:self.cursor] + self.text[self.cursor+1:]
-                    elif key == pg.K_LEFT:
-                        self.cursor = max(0, self.cursor - 1)
-                    elif key == pg.K_RIGHT:
-                        self.cursor = min(len(self.text), self.cursor + 1)
 
     def draw(self, screen):
         if self.hidden:
@@ -92,39 +79,59 @@ class Input(Node):
                         color=self.text_color, sysfontname="simsun")
             screen.blit(self.surface, self.screen_rect)
         if self.focus and self.show_blink:
-            screen.blit(self.cursor_surface, (self.screen_rect.x + min(self.cursor_pixel_len, self.w), self.screen_rect.y))
-        
-    def on_key_up(self, event):
-        if self.focus:
-            key = event.key
-            if key in REPEAT and key in self.key_repeat_counter:
-                self.key_repeat_counter.pop(key)
+            screen.blit(self.cursor_surface, (self.screen_rect.x + min(self.cursor_pixel_x, self.w), self.screen_rect.y))
+    
 
     def on_key_down(self, event):
         if self.focus:
             key = event.key
-            if key in REPEAT:
-                self.key_repeat_counter[key] = True
-                self.frame_count = 5
+            print(event, event.__dict__)
+            if key == pg.K_BACKSPACE:
+                if len(self.text) > 0 and self.cursor > 0:
+                    self.text = self.text[:self.cursor-1] + self.text[self.cursor:]
+                    self.cursor = max(0, self.cursor - 1)                       
+            elif key  == pg.K_DELETE:
+                self.text = self.text[:self.cursor] + self.text[self.cursor+1:]
+            elif key == pg.K_LEFT:
+                self.cursor = max(0, self.cursor - 1)
+            elif key == pg.K_RIGHT:
+                self.cursor = min(len(self.text), self.cursor + 1)
             elif key == K_END:
                 self.cursor = len(self.text)
             elif key == K_HOME:
                 self.cursor = 0
             elif key == K_KP_ENTER or key == K_RETURN:
                 self.emit("text_enter", input_id=self.id, text=self.text)
+            elif key == K_c and event.mod == 4160:
+                print("CTRL  C")
+            elif key == K_v and event.mod == 4160:
+                _bytes = pg.scrap.get(pg.SCRAP_TEXT)[:-1]
+                self.add_text(_bytes.decode("utf-8"))
             event.handled = True
 
     def on_text_input(self, event):
         if self.focus:
-            text = "".join([c for c in event.text if not self.no_chinese or not self.is_chinese(c)])
-            self.text = self.text[:self.cursor] + text + self.text[self.cursor:]
-            self.cursor += len(text)
+            self.add_text(event.text)
             event.handled = True
+
+    def add_text(self, _text):
+        text = "".join([c for c in _text if not self.no_chinese or not self.is_chinese(c)])
+        self.text = self.text[:self.cursor] + text + self.text[self.cursor:]
+        self.cursor += len(text)
 
     def on_mouse_left_down(self, event):
         if not event.processed and self.is_in(event.pos):
+            relative_x = event.pos[0] - self.screen_rect.x
+            select_x = min(self.text_position[-1], relative_x)
+            index = -1
+            for pos in self.text_position:
+                if select_x < pos:
+                    break
+                index += 1
+            self.cursor = index
             self.focus = True
             event.processed = True
+            pg.key.set_text_input_rect(self.screen_rect)
         else:
             self.focus = False
 

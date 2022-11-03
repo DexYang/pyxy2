@@ -30,6 +30,9 @@ class Director(Ref):
         self._screen = pg.display.set_mode(resolution)
         pg.display.set_icon(pg.image.load('ico.ico'))
 
+        pg.scrap.init()
+        pg.key.set_repeat(150, 50)
+
         self.scene_class_pool = {}
         self._scene = None
         self._old_scene = None
@@ -85,6 +88,7 @@ class Director(Ref):
     def handle_events(self, events):
         for event in events:
             event_attributes = event.__dict__
+            print(event.type, event_attributes)
             if event.type in INTERACTIVE_EVENTS:
                 event_type = INTERACTIVE_EVENTS[event.type]
                 if isinstance(event_type, dict):  # 如果有二级列表
@@ -110,6 +114,7 @@ class Director(Ref):
 
     def draw(self):
         # self._screen.fill((70, 70, 70))
+        self._screen.fill((0, 0, 0))
         self._scene.draw(self._screen)
         self.tip_layer.draw(self._screen)
         self.mouse.draw(self._screen)
