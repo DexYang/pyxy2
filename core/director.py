@@ -30,7 +30,6 @@ class Director(Ref):
         self._screen = pg.display.set_mode(resolution)
         pg.display.set_icon(pg.image.load('ico.ico'))
 
-        pg.scrap.init()
         pg.key.set_repeat(150, 50)
 
         self.scene_class_pool = {}

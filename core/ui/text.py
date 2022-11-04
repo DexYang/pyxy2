@@ -7,6 +7,8 @@ from lib import ptext
 import re
 from settings import XY2PATH
 
+from utils.is_chinese import is_chinese
+
 pattern = re.compile(r'[0-9a-fA-F]{6}')       
 
 TEMPLATES = {
@@ -220,7 +222,7 @@ class Text(Node):
                     i += 1
                     line_height_correcter[i] = 0
             else: 
-                char_len = self.font_size if self.is_chinese(c) else self.font_size // 2
+                char_len = self.font_size if is_chinese(c) else self.font_size // 2
                 if x + char_len > self.w:  # 宽度不足，换行
                     text.line = i
                     self.max_width = max(self.max_width, x + char_len)
@@ -272,15 +274,6 @@ class Text(Node):
 
     def draw(self, screen):
         return self.draw_children(screen) 
-
-    @staticmethod
-    def is_chinese(uchar):
-        if len(uchar) != 1:
-            raise TypeError('expected a character, but a string found!')
-        if u'\u4e00' <= uchar <= u'\u9fa5':
-            return True
-        else:
-            return False
 
 
 class ColorWrapper:
@@ -377,18 +370,9 @@ class TextWrapper(Node):
                         self.alpha_direction = 'down'
                 self.last_time = current_time
 
-    @staticmethod
-    def is_chinese(uchar):
-        if len(uchar) != 1:
-            raise TypeError('expected a character, but a string found!')
-        if u'\u4e00' <= uchar <= u'\u9fa5':
-            return True
-        else:
-            return False
-
     def append(self, char):
         self.text += char
-        self.len += self.fontsize if self.is_chinese(char) else self.fontsize / 2
+        self.len += self.fontsize if is_chinese(char) else self.fontsize / 2
 
     def is_empty(self):
         return True if self.text == "" else False
