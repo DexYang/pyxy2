@@ -54,7 +54,6 @@ class Sprite(Ref):
     def update(self, context):
         left, top = context.get_left_top()
         self.screen_rect = self.rect.move(-left, -top)
-        self.z = self.y
         self.update_children(context)
 
     def update_children(self, context):

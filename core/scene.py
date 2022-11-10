@@ -12,9 +12,9 @@ class Scene(Ref):
         self.scene_class_name = ""
         self.title = ""
 
-        self.win_layer = Blank()
+        self.win_layer = None
 
-        self.ui_layer = Blank()
+        self.ui_layer = None
 
         self.world_layer = None
 

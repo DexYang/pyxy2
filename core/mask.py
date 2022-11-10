@@ -10,16 +10,16 @@ bright.fill((250, 80, 80, 0))
 
 
 class Mask(Sprite):
-    def __init__(self, mask_index, start_x, start_y, width, height):
+    def __init__(self, mask_index, x, y, width, height):
         super().__init__()
         self.surface = None
 
         self.mask_index = mask_index
-        self.start_x = start_x
-        self.start_y = start_y
+        self.x = x
+        self.y = y
         self.width = width
         self.height = height
-        self.rect = Rect(start_x, start_y, width, height)
+        self.rect = Rect(x, y, width, height)
 
         self.z = self.rect.y + self.rect.height
 
@@ -39,7 +39,13 @@ class Mask(Sprite):
     def parent(self, node):
         self._parent = weakref.ref(node)
 
+    def patch(self):
+        if str(self._parent().map_id) == '1006':
+            h = min(self.height, 350)
+            self.z = self.rect.y + h
+
     def load_surface(self):
+        self.patch()
         self.surface = pg.image.frombuffer(
             self.parent.map.get_mask_rgba(self.mask_index, self.width * self.height * 4),
             (self.width, self.height), "RGBA")
@@ -49,7 +55,7 @@ class Mask(Sprite):
             self.sort_table.append(self.calc_sort_point(x))
         # TODO
         font = pg.font.SysFont("simsun", 16)
-        self.font_surf = font.render((str(self.start_x)+":"+str(self.start_y)), True, (255, 0, 0))
+        self.font_surf = font.render((str(self.x)+":"+str(self.y)), True, (255, 0, 0))
 
     def update(self, context):
         left, top = context.get_left_top()

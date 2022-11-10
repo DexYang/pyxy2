@@ -15,6 +15,8 @@ from core.role_manager import role_manager
 from lib.pyxy2 import end_loop
 from utils import transitions
 
+from lib import ptext
+
 
 class Director(Ref):
     def __init__(self, title="Director", resolution=(640, 480), fps=60):
@@ -87,7 +89,6 @@ class Director(Ref):
     def handle_events(self, events):
         for event in events:
             event_attributes = event.__dict__
-            print(event.type, event_attributes)
             if event.type in INTERACTIVE_EVENTS:
                 event_type = INTERACTIVE_EVENTS[event.type]
                 if isinstance(event_type, dict):  # 如果有二级列表
@@ -117,6 +118,7 @@ class Director(Ref):
         self._scene.draw(self._screen)
         self.tip_layer.draw(self._screen)
         self.mouse.draw(self._screen)
+        ptext.draw(str(int(self.clock.get_fps())), (0, 50))
 
     def run(self, scene_class_name=None):
         if scene_class_name:

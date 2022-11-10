@@ -1,12 +1,17 @@
-import importlib
+import os
+import pkgutil
 
 from core.scene import Scene
 from core.world import World
 
+from core.ui.node import Blank
 from core.ui.static_node import StaticNode, ExtWidthStatic
 from core.ui.input import Input
 from core.role_manager import role_manager
 from core.ui.one_pic_button import OnePicButton
+
+from game.scenes.portal import Portal
+from game.scenes.dialog_layer import DialogLayer
 
 from .quic_buttons import get_quic_buttons
 from .status import 气血条, 法力条, 经验条, 召唤兽气血条, 召唤兽法力条, 召唤兽经验条
@@ -18,18 +23,19 @@ from settings import UI, WindowSize
 class WorldScene(Scene):
     def __init__(self, map_id, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.map_id = map_id
 
         # world_layer
         self.world_layer = World(map_id)
 
-        try:
-            portals = importlib.import_module('game.scenes.' + str(map_id)).portal
-            for p in portals:
-                self.world_layer.add_child(p)
-        except Exception as e:
-            self.log.info(e)
+        # 加载地图目录下的类或对象，Portals
+        self.load()
+        # 加载地图目录下的NPC
+        self.load('npc')
 
-        # ui_layer
+        self.win_layer = DialogLayer()
+
+        self.ui_layer = Blank()
         # 坐标
         for k, v in res[UI]["坐标"].items():
             self.ui_layer.add_child(StaticNode(name=k, **v))
@@ -90,3 +96,21 @@ class WorldScene(Scene):
             头像.click = 头像.method(click)
             self.ui_layer.add_child(头像)
             _y += 31
+
+    def load(self, path = ""):
+        path_list = [os.path.dirname(__file__) + "\\" + self.map_id + "\\" + path]
+        for file_finder, name, _ in pkgutil.iter_modules(path_list):
+            module = file_finder.find_module(name).load_module(name)
+            try:
+                for attr_name in module.__dir__():
+                    if attr_name.startswith("__") or \
+                        attr_name == "Portal" or \
+                        attr_name == "NPC":
+                        continue
+                    attr = getattr(module, attr_name)
+                    if type(attr) == type:
+                        attr = attr()
+                    self.world_layer.add_child(attr)
+            except Exception as e:
+                self.log.error(e)
+

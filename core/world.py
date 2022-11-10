@@ -79,7 +79,7 @@ class World(Sprite):
 
         self.left_top = ()
 
-        self.update_count = 0
+        self.update_count = 1
 
     def handle_events(self, event):
         self.children_handle_events(event)
@@ -104,6 +104,9 @@ class World(Sprite):
         self.add_to_upper_layer(Throwaway("gires.wdf", "scene/walkpoint.tca", target[0], target[1]))
 
     def update(self, context):
+        self.update_count -= 1
+        if self.update_count < 0:
+            self.update_count = 10
         main_role = role_manager.main_role
         self.window_update(main_role.x, main_role.y)
         context.set_left_top(self.window.left, self.window.top)  # 获取地图窗口左上角
@@ -123,35 +126,37 @@ class World(Sprite):
         self.upper_layer[item.id] = item
 
     def map_update(self, context):
-        self.mask_in_window = []
-        no_repeat = {}
-        for i in range(self.window_start_row, self.window_end_row + 1):
-            for j in range(self.window_start_col, self.window_end_col + 1):
-                block = self.map_block_info[i][j]
-                if not block["requested"]:  # 未请求JPEG
-                    self.map.read_jpeg(block["id"])  # 请求地图区块jpeg
-                    block["masks"] = self.map.get_block_masks_py(block["id"])
-                    block["mask_count"] = len(block["masks"])
-                    block["requested"] = True
-                elif not block["received"]:  # 已请求JPEG但未收到
-                    if self.map.has_jpeg_loaded(block["id"]):  # 收到
-                        block["received"] = True
-                        block["surface"] = pg.image.frombuffer(self.map.get_jpeg_rgb(block["id"]), (320, 240), "RGB")
-                        self.map.erase_jpeg_rgb(block["id"])
+        if self.update_count == 0:
+            self.mask_in_window = []
+            no_repeat = {}
+            for i in range(self.window_start_row, self.window_end_row + 1):
+                for j in range(self.window_start_col, self.window_end_col + 1):
+                    block = self.map_block_info[i][j]
+                    if not block["requested"]:  # 未请求JPEG
+                        self.map.read_jpeg(block["id"])  # 请求地图区块jpeg
+                        block["masks"] = self.map.get_block_masks_py(block["id"])
+                        block["mask_count"] = len(block["masks"])
+                        block["requested"] = True
+                    elif not block["received"]:  # 已请求JPEG但未收到
+                        if self.map.has_jpeg_loaded(block["id"]):  # 收到
+                            block["received"] = True
+                            block["surface"] = pg.image.frombuffer(self.map.get_jpeg_rgb(block["id"]), (320, 240), "RGB")
+                            self.map.erase_jpeg_rgb(block["id"])
 
-                for mask_index in block["masks"]:  # 请求地图区块中的mask
-                    if not self.masks[mask_index].requested:  # 未请求Mask
-                        self.map.read_mask(mask_index)
-                        self.masks[mask_index].requested = True
-                    elif not self.masks[mask_index].received:  # 已请求Mask但未收到
-                        if self.map.has_mask_loaded(mask_index):
-                            self.masks[mask_index].received = True
-                            self.masks[mask_index].load_surface()
-                            self.map.erase_mask_rgb(mask_index)
-                    elif mask_index not in no_repeat:
-                        no_repeat[mask_index] = True
-                        self.masks[mask_index].update(context)
-                        self.mask_in_window.append(self.masks[mask_index])
+                    for mask_index in block["masks"]:  # 请求地图区块中的mask
+                        if not self.masks[mask_index].requested:  # 未请求Mask
+                            self.map.read_mask(mask_index)
+                            self.masks[mask_index].requested = True
+                        elif not self.masks[mask_index].received:  # 已请求Mask但未收到
+                            if self.map.has_mask_loaded(mask_index):
+                                self.masks[mask_index].received = True
+                                self.masks[mask_index].load_surface()
+                                self.map.erase_mask_rgb(mask_index)
+                        elif mask_index not in no_repeat:
+                            no_repeat[mask_index] = True
+                            self.mask_in_window.append(self.masks[mask_index])
+        for mask in self.mask_in_window:
+            mask.update(context)
         self.mask_in_window.sort(key=lambda item: item.z)
 
     def window_update(self, x, y, directly=False):
@@ -196,7 +201,7 @@ class World(Sprite):
                     objs_list = list(self.heads[i][j].values())
                     for obj in objs_list:
                         obj.update(context)
-                        if isinstance(obj, Character):
+                        if self.update_count == 5:
                             self.character_update_z_under_mask(obj)
                         tmp_row, tmp_col = self.get_window_index(obj.x, obj.y)
                         if tmp_row != i or tmp_col != j or obj.useless:
@@ -221,6 +226,8 @@ class World(Sprite):
                             return
 
     def character_update_z_under_mask(self, character):
+        character.z = character.y
+
         char_rect = character.get_ani_rect()
         char_x = character.x
         char_y = character.y
@@ -260,7 +267,7 @@ class World(Sprite):
         for item in render_items:
             item.draw(area)
         for item in render_items:
-            item.draw_text(area)
+            item.draw_text(screen)
         screen.blit(area, (0, 0))
 
         for item in list(self.upper_layer.values()):
