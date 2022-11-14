@@ -11,6 +11,7 @@ class Event:
             self.__setattr__(key, value)
 
 
+
 INTERACTIVE_EVENTS = {
     KEYDOWN: "key_down",
     KEYUP: "key_up",

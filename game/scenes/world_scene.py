@@ -11,7 +11,7 @@ from core.role_manager import role_manager
 from core.ui.one_pic_button import OnePicButton
 
 from game.scenes.portal import Portal
-from game.scenes.dialog_layer import DialogLayer
+from game.scenes.window_layer import WindowLayer
 
 from .quic_buttons import get_quic_buttons
 from .status import 气血条, 法力条, 经验条, 召唤兽气血条, 召唤兽法力条, 召唤兽经验条
@@ -33,7 +33,7 @@ class WorldScene(Scene):
         # 加载地图目录下的NPC
         self.load('npc')
 
-        self.win_layer = DialogLayer()
+        self.win_layer = WindowLayer()
 
         self.ui_layer = Blank()
         # 坐标

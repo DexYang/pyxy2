@@ -101,6 +101,7 @@ class Node(Ref):
                 self.children.pop(child.name)
                 self.children_z[child.z].pop(child.name)
                 child.destroy()
+                self.changed = True
 
     def draw_children(self, screen):
         if self.hidden:

@@ -42,13 +42,20 @@ class NPC(AnimatedSprite):
         return self.get_ani_screen_rect().collidepoint(x, y)
 
     def on_mouse_left_down(self, event):
-        self.emit("open_dialog", **self.get_dialog_content())
-        event.handled = True
+        if not event.processed:
+            if self.get_at(*event.pos):
+                event.handled = True
+
+    def on_mouse_left_up(self, event):
+        if not event.processed:
+            if self.get_at(*event.pos):
+                self.emit("open_dialog", **self.get_dialog_content())
+                event.handled = True
 
     def get_dialog_content(self):
         return {
             "title": "",
-            "options": [
-
-            ]
+            "options": {
+                
+            }
         }

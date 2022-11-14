@@ -148,7 +148,7 @@ class Input(Node):
                 elif key == K_v and event.mod == 4160:
                     s = pyperclip.paste()
                     self.add_text(s)
-            event.handled = True
+                event.handled = True
         except Exception as e:
             self.log.info(e)
 
