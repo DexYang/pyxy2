@@ -15,7 +15,7 @@ res = {
             "关闭": {"wdf": "gires4.wdf", "was_hash": "经典红木/窗口底图/关闭按钮.tcp"},
         },
 
-        "大对话框": {"wdf": "gires4.wdf", "was_hash": "水墨书卷/窗口底图/大对话框.tcp"},
-        "小对话框": {"wdf": "gires4.wdf", "was_hash": "水墨书卷/窗口底图/小对话框.tcp"},
+        "大对话框": {"wdf": "gires4.wdf", "was_hash": "经典红木/窗口底图/大对话框.tcp"},
+        "小对话框": {"wdf": "gires4.wdf", "was_hash": "经典红木/窗口底图/小对话框.tcp"},
     }
 }

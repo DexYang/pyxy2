@@ -49,7 +49,7 @@ class NPC(AnimatedSprite):
     def on_mouse_left_up(self, event):
         if not event.processed:
             if self.get_at(*event.pos):
-                self.emit("open_dialog", **self.get_dialog_content())
+                self.emit("open_dialog", npc_id=self.CHAR_ID, npc_name=str(self.__class__.__name__), **self.get_dialog_content())
                 event.handled = True
 
     def get_dialog_content(self):
