@@ -28,18 +28,38 @@
 #   ext_modules = cythonize("settings.py"),
 # )
 
-import aiohttp
-import asyncio
+# import aiohttp
+# import asyncio
 
-async def main():
+# async def main():
 
-    async with aiohttp.ClientSession() as session:
-        async with session.get('http://python.org') as response:
+#     async with aiohttp.ClientSession() as session:
+#         async with session.get('http://python.org') as response:
 
-            print("Status:", response.status)
-            print("Content-type:", response.headers['content-type'])
+#             print("Status:", response.status)
+#             print("Content-type:", response.headers['content-type'])
 
-            html = await response.text()
-            print("Body:", html[:15], "...")
+#             html = await response.text()
+#             print("Body:", html[:15], "...")
 
-asyncio.run(main())
+# asyncio.run(main())
+
+
+from core.flow import Flow, Conversation
+
+
+model = Conversation()
+
+print(model.state)    # solid
+print(model.get())
+model.proceed(0)
+model.proceed()
+
+print(model.state)    # solid
+print(model.get())
+
+model.proceed(0)
+model.proceed()
+
+print(model.state)    # solid
+print(model.get())

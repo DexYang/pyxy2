@@ -9,7 +9,7 @@ def get角色(char_id, role_name):
 
         "名字": role_name,
         "称谓": [
-            "pyxy2一员"
+            "大话西游一员"
         ],
         "已选称谓": 0,
 
@@ -43,7 +43,7 @@ def get角色(char_id, role_name):
 
         "经验": 1800,
 
-        "map_id": 1001,
+        "map_name": "老长安",
         "x": 5100,
         "y": 4200,
 

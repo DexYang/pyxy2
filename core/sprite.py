@@ -85,8 +85,8 @@ class Sprite(Ref):
         for child in list(self.children_text.values()):
             child.draw(screen)
             
-    def add_child(self, node):
-        if node.name not in self.children:
+    def add_child(self, node, override=False):
+        if node.name not in self.children or override:
             node.parent = self
             self.children[node.name] = node
             if isinstance(node, Text):

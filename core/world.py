@@ -79,7 +79,7 @@ class World(Sprite):
 
         self.left_top = ()
 
-        self.update_count = 1
+        self.update_count = 0
 
     def handle_events(self, event):
         self.children_handle_events(event)
@@ -165,7 +165,7 @@ class World(Sprite):
             window_left = 0
         elif x + WindowSize[0] // 2 > self.map.width:
             window_left = self.map.width - WindowSize[0]
-        self.window_start_col = window_left // 320
+        self.window_start_col = max(window_left // 320, 0)
         self.window_start_col_ext = max(self.window_start_col - 1, 0)
         self.window_end_col = min(self.window_start_col + self.window_cols + 1, self.map.col_count - 1)
         self.window_end_col_ext = min(self.window_end_col + 1, self.map.col_count - 1)
@@ -174,7 +174,7 @@ class World(Sprite):
             window_top = 0
         elif y + WindowSize[1] // 2 > self.map.height:
             window_top = self.map.height - WindowSize[1]
-        self.window_start_row = window_top // 240
+        self.window_start_row = max(window_top // 240, 0)
         self.window_start_row_ext = max(self.window_start_row - 1, 0)
         self.window_end_row = min(self.window_start_row + self.window_rows + 1, self.map.row_count - 1)
         self.window_end_row_ext = min(self.window_end_row + 1, self.map.row_count - 1)
@@ -201,7 +201,7 @@ class World(Sprite):
                     objs_list = list(self.heads[i][j].values())
                     for obj in objs_list:
                         obj.update(context)
-                        if self.update_count == 5:
+                        if self.update_count == 5 and isinstance(obj, Character):
                             self.character_update_z_under_mask(obj)
                         tmp_row, tmp_col = self.get_window_index(obj.x, obj.y)
                         if tmp_row != i or tmp_col != j or obj.useless:

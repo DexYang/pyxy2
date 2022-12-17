@@ -1,5 +1,6 @@
 import os
 import pkgutil
+import importlib
 
 from core.scene import Scene
 from core.world import World
@@ -18,20 +19,51 @@ from .status import 气血条, 法力条, 经验条, 召唤兽气血条, 召唤�
 
 from data.world.ui import res
 from settings import UI, WindowSize
+from utils.is_chinese import is_chinese
+
+base_path = 'game.scenes'
+
+
+class MapConvert:
+    _instance = None
+    MAP_ID = {}
+
+    def __new__(cls):
+        if not hasattr(cls, '_instance') or cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+    def __init__(self):
+        path = os.path.dirname(__file__)
+        self.load(path)
+
+    def load(self, path, prefix=""):
+        for item in os.listdir(path):
+            if os.path.isdir(os.path.join(path, item)) and is_chinese(item[0]):
+                self.MAP_ID[prefix + item] = True
+                self.load(path + "\\" + item, item + ".")
+
+
+map_converter = MapConvert()
 
 
 class WorldScene(Scene):
-    def __init__(self, map_id, *args, **kwargs):
+    def __init__(self, map_name, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.map_id = map_id
 
-        # world_layer
-        self.world_layer = World(map_id)
+        self.map_name = map_name
 
+        mod = importlib.import_module(base_path + '.' + self.map_name)
+        self.map_id = mod.map_id
+        
+        self.world_layer = World(self.map_id)
         # 加载地图目录下的类或对象，Portals
         self.load()
         # 加载地图目录下的NPC
         self.load('npc')
+        
+        # world_layer
+        
 
         self.win_layer = WindowLayer()
 
@@ -97,20 +129,32 @@ class WorldScene(Scene):
             self.ui_layer.add_child(头像)
             _y += 31
 
-    def load(self, path = ""):
-        path_list = [os.path.dirname(__file__) + "\\" + self.map_id + "\\" + path]
-        for file_finder, name, _ in pkgutil.iter_modules(path_list):
-            module = file_finder.find_module(name).load_module(name)
-            try:
-                for attr_name in module.__dir__():
-                    if attr_name.startswith("__") or \
-                        attr_name == "Portal" or \
-                        attr_name == "NPC":
-                        continue
-                    attr = getattr(module, attr_name)
-                    if type(attr) == type:
-                        attr = attr()
-                    self.world_layer.add_child(attr)
-            except Exception as e:
-                self.log.error(e)
+    def load(self, path=""):
+        try:
+            if path == "":
+                mod = importlib.import_module(base_path + '.' + self.map_name)
+                for portal in mod.portals:
+                    self.world_layer.add_child(portal)
+                self.map_id = mod.map_id
+            else:
+                abs_path = os.path.dirname(__file__) + "\\" + self.map_name.replace(".", "\\") + "\\" + path
+                for item in os.listdir(abs_path):
+                    if os.path.isfile(os.path.join(abs_path, item)) and is_chinese(item[0]):
+                        name = base_path + '.' + self.map_name + '.' + path + '.' + item[:-3]
+                        importlib.import_module(name)
+                        module = importlib.find_loader(name).load_module(name)
+                        for attr_name in module.__dir__():
+                            if attr_name.startswith("_") or \
+                                    attr_name == "Conversation" or \
+                                    attr_name == "Portal" or \
+                                    attr_name == "WorldNPC":
+                                continue
+                            attr = getattr(module, attr_name)
+                            if type(attr) == type:
+                                attr = attr()
+                            self.world_layer.add_child(attr)
+        except Exception as e:
+            import traceback
+            self.log.error(e)
+            traceback.print_exc()
 

@@ -390,12 +390,12 @@ class TextWrapper(Node):
         if self.font_name == "":
             ptext.draw(self.text, pos=(self.screen_rect.x + dx, self.screen_rect.y + dy), 
                 color=self.color, bold=self.bold, italic=self.italic, surf=screen,
-                width=self.w,
+                width=self.w, 
                 underline=self.underline, fontsize=self.fontsize, sysfontname="simsun", alpha=self.alpha, shadow=self.shadow, scolor=self.scolor,
                 colortag=self.ColorTag, underlinetag=self.UnderlineTag, boldtag=self.BoldTag, italictag=self.ItalicTag)
         else:
             ptext.draw(self.text, pos=(self.screen_rect.x + dx, self.screen_rect.y + dy), 
                 color=self.color, bold=self.bold, italic=self.italic, surf=screen,
-                width=self.w,
+                width=self.w, 
                 underline=self.underline, fontsize=self.fontsize, fontname=self.font_name, alpha=self.alpha, shadow=self.shadow, scolor=self.scolor,
                 colortag=self.ColorTag, underlinetag=self.UnderlineTag, boldtag=self.BoldTag, italictag=self.ItalicTag)

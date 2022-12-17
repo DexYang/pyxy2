@@ -157,7 +157,7 @@ class Director(Ref):
         
         self.transition.init(self._screen, *self.resolution)
         if not transition:
-            transition = random.choice(self.transition_choices)
+            transition = "up"
         self.transition.run(transition, 0.7)
         
         scene = self.scene_class_pool[scene_class_name](*args, **kwargs)

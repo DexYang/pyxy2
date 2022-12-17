@@ -32,10 +32,9 @@ class Character(AnimatedSprite):
 
         self.mask = None
 
-        self.名字 = Text("#c00FF00#d"+self.data["名字"], w=100, h=16, font_size=16, shadow=True, font_name='font/AdobeSong.ttf')
-        self.名字.x = - self.名字.max_width / 2
-        self.名字.y = 20
-        self.add_child(self.名字)
+        self.set_name(self.data["称谓"][self.data["已选称谓"]], self.data["名字"])
+
+        self.tasks = {}
     
     @property
     def x(self):  # x y为世界坐标，因为ani在draw时，已经减去锚点，实际上xy是人物锚点（人物脚底）
@@ -80,3 +79,26 @@ class Character(AnimatedSprite):
 
     def get_at(self, x, y):
         return self.get_ani_screen_rect().collidepoint(x, y)
+
+    def add_task(self, task):
+        self.tasks[task.name] = task
+
+    def set_name(self, nomination, name):
+        y = 20
+        # if nomination:
+        #     if hasattr(self, "称谓"):
+        #         self.称谓.set_text(nomination)
+        #     else:
+        #         self.称谓 = Text("#B#d"+nomination, w=100, h=16, font_size=16, shadow=True, font_name='font/AdobeSong.ttf')
+        #         self.add_child(self.称谓)
+        #     self.称谓.x = - self.称谓.max_width / 2
+        #     self.称谓.y = y
+        #     y += 20
+        if hasattr(self, "名字"):
+            self.名字.set_text(name)
+        else:
+            self.名字 = Text("#c00FF00#d"+name, w=100, h=16, font_size=16, shadow=True, font_name='font/AdobeSong.ttf')
+            self.add_child(self.名字, override=True)
+        self.名字.x = - self.名字.max_width / 2
+        self.名字.y = y
+        

@@ -122,6 +122,9 @@ class RoleCreate(LoginScene):
 
     def create(self):
         role_name = self.input.get()
+        if self.selected == 0:
+            self.emit("tip", text="请选择角色#32")
+            return
         if len(role_name) == 0:
             self.emit("tip", text="请输入角色名称")
             return

@@ -13,12 +13,7 @@ class StaticNode(Node):
         self.was_hash = was_hash
 
         self.surface = None
-        self.item = res_manager.get(wdf, was_hash)
-        if isinstance(self.item, WAS):
-            self.item = Animation(self.item)
-            self.surface = self.item.get_current_frame().surface
-        else:
-            self.surface = self.item
+        self.set_bg(wdf, was_hash)
 
         if w and h:
             self.surface = pg.transform.smoothscale(self.surface, (w, h))
@@ -29,6 +24,14 @@ class StaticNode(Node):
         if self.hidden:
             return
         screen.blit(self.surface, self.screen_rect)
+
+    def set_bg(self, wdf, was_hash):
+        self.item = res_manager.get(wdf, was_hash)
+        if isinstance(self.item, WAS):
+            self.item = Animation(self.item)
+            self.surface = self.item.get_current_frame().surface
+        else:
+            self.surface = self.item
 
 
 class StaticText(StaticNode):

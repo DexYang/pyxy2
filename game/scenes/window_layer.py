@@ -13,6 +13,6 @@ class WindowLayer(Blank):
         self.max_z += 1
 
     def on_open_dialog(self, event):
-        npc_dialog = NPCDialog(event.npc_id, event.npc_name, event.title, event.options)
+        npc_dialog = NPCDialog(event.npc_id, event.npc_name, event.conversation)
         self.add_child(npc_dialog)
         event.handled = True

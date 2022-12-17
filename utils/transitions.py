@@ -91,7 +91,11 @@ def update_screen():
 			transition_data = False
 			transition = False
 		else:
-			if transition == "fadeOutUp":
+			if transition == "up":
+				transition_data.screen.set_alpha(255)
+				transition_data.current_screen = screen
+				transition_data.current_screen.blit(transition_data.screen, (0,  -window_height * time_ratio))
+			elif transition == "fadeOutUp":
 				transition_data.screen.set_alpha(255-255*time_ratio)
 				rect1 = transition_data.screen.get_rect()
 				transition_data.current_screen = pygame.transform.smoothscale(

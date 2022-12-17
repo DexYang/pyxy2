@@ -1,7 +1,8 @@
 from game.scenes.portal import Portal
 
-map_id = 1001
+map_id = 1013
+
 
 portals = [
-    Portal(4453, 3575, '1410', 3390, 2350)  # 传送新长安
+    Portal(190, 365, '老长安', 3426, 3440)
 ]
